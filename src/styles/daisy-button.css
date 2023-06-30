@@ -1,0 +1,24 @@
+@layer components {
+  [data-theme="venturarodriguezxyz"] .btn.btn-primary {
+    @apply active:opacity-90;
+  }
+  [data-theme="venturarodriguezxyz"] .btn.btn-link {
+    @apply underline-offset-4;
+  }
+  [data-theme="venturarodriguezxyz"] .btn.btn-sm {
+    @apply h-9;
+  }
+  [data-theme="venturarodriguezxyz"] .btn.btn-square:not(.btn-sm),
+  [data-theme="venturarodriguezxyz"]
+    .btn.btn-square:not(.btn-xs)
+    [data-theme="venturarodriguezxyz"]
+    .btn.btn-square.btn-md {
+    @apply rounded-[0.25rem] h-12 w-12;
+  }
+  [data-theme="venturarodriguezxyz"] .btn.btn-square.btn-sm {
+    @apply rounded-[0.25rem] h-9 w-9;
+  }
+  [data-theme="venturarodriguezxyz"] .btn.btn-square.btn-xs {
+    @apply rounded-[0.25rem] h-6 w-6;
+  }
+}

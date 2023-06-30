@@ -1,15 +1,27 @@
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8" />
-    <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
-    <meta name="viewport" content="width=device-width" />
-    <title>Ventura Rodríguez ツ</title>
-  </head>
-  <body class="grid place-content-center min-h-screen">
-    <p class="text-center">
-      Hey there! Welcome to my personal website. Currently is empty space, <br
-      />but I'm actively working on posting engaging content very soon. Stay
-      tuned for updates!
-    </p>
-  </body>
-</html>
+---
+import MainLayout from "../layouts/Main.astro";
+import SplashLayout from "../layouts/Splash.astro";
+---
+
+<MainLayout>
+  <SplashLayout>
+    <section class="relative">
+      <div
+        class="grid md:grid-rows-[auto,1fr] h-full px-6 md:px-16 max-w-screen-2xl mx-auto"
+      >
+        <span
+          class="md:text-left text-center md:text-6xl text-4xl md:pt-16 max-md:mt-auto"
+        >
+          Welcome
+        </span>
+        <div
+          class="md:text-right md:self-center text-center md:text-4xl text-lg max-md:pt-8 md:pl-8 !leading-relaxed"
+        >
+          <span class="min-w-max inline-block">I'm an entrepreneur,</span>
+          <span class="min-w-max inline-block"> technology enthusiast,</span>
+          <span class="min-w-max inline-block"> and software engineer</span>
+        </div>
+      </div>
+    </section>
+  </SplashLayout>
+</MainLayout>

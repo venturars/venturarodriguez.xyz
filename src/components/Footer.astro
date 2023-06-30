@@ -1,0 +1,56 @@
+---
+import Github from "../components/icons/Github.astro";
+import Linkedin from "../components/icons/Linkedin.astro";
+import Twitter from "../components/icons/Twitter.astro";
+---
+
+<footer
+  class="md:h-14 flex max-md:flex-col px-2 md:justify-between max-md:pt-2"
+>
+  <div
+    class="grid grid-rows-2 py-1 max-md:order-2 max-md:mx-auto max-md:text-center max-md:mt-6 max-md:mb-3"
+  >
+    <address class="text-base not-italic">Ventura Rodríguez ツ</address>
+    <span class="text-sm font-bold">Web3-focused Software Engineer</span>
+  </div>
+  <ul class="flex items-center max-md:order-3 max-md:mx-auto">
+    <li class="h-fit">
+      <a
+        href="/terms-of-use"
+        class="text-xs btn btn-link link-primary"
+        target="_blank">Terms of use</a
+      >
+    </li>
+    <div class="text-xs h-fit text-primary cursor-default">|</div>
+    <li>
+      <a
+        href="/privacy-policy"
+        class="text-xs btn btn-link link-primary"
+        target="_blank">Privacy policy</a
+      >
+    </li>
+  </ul>
+  <ul class="flex space-x-4 max-md:order-1 max-md:mx-auto">
+    <li class="grid place-content-center">
+      <a
+        href="https://www.linkedin.com/in/ventura-rodriguez/"
+        target="_blank"
+        class="btn btn-square btn-ghost"><Linkedin /></a
+      >
+    </li>
+    <li class="grid place-content-center">
+      <a
+        href="https://github.com/venturars"
+        target="_blank"
+        class="btn btn-square btn-ghost"><Github /></a
+      >
+    </li>
+    <li class="grid place-content-center">
+      <a
+        href="https://twitter.com/ventura_r_s"
+        target="_blank"
+        class="btn btn-square btn-ghost"><Twitter /></a
+      >
+    </li>
+  </ul>
+</footer>
