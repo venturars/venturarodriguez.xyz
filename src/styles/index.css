@@ -1,0 +1,10 @@
+@import "./tailwind.css";
+
+@layer base {
+  [data-theme="venturarodriguezxyz"] {
+    @apply bg-base-100 font-ChakraPetch;
+  }
+  span {
+    @apply cursor-default;
+  }
+}
