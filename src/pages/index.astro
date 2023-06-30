@@ -1,13 +1,27 @@
 ---
 import MainLayout from "../layouts/Main.astro";
+import SplashLayout from "../layouts/Splash.astro";
 ---
 
 <MainLayout>
-  <section
-    class="grid place-content-center min-h-[var(--splash-height)] bg-black"
-  >
-    <footer class="">
-      <address class="font-ChakraPetch">Ventura Rodríguez ツ</address>
-    </footer>
-  </section>
+  <SplashLayout>
+    <section class="relative">
+      <div
+        class="grid md:grid-rows-[auto,1fr] h-full px-6 md:px-16 max-w-screen-2xl mx-auto"
+      >
+        <span
+          class="md:text-left text-center md:text-6xl text-4xl md:pt-16 max-md:mt-auto"
+        >
+          Welcome
+        </span>
+        <div
+          class="md:text-right md:self-center text-center md:text-4xl text-lg max-md:pt-8 md:pl-8 !leading-relaxed"
+        >
+          <span class="min-w-max inline-block">I'm an entrepreneur,</span>
+          <span class="min-w-max inline-block"> technology enthusiast,</span>
+          <span class="min-w-max inline-block"> and software engineer</span>
+        </div>
+      </div>
+    </section>
+  </SplashLayout>
 </MainLayout>

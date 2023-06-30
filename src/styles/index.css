@@ -1,10 +1,9 @@
 @import "./tailwind.css";
+@import "./daisy-link.css";
+@import "./daisy-button.css";
 
 @layer base {
   [data-theme="venturarodriguezxyz"] {
     @apply bg-base-100 font-ChakraPetch;
-  }
-  span {
-    @apply cursor-default;
   }
 }
