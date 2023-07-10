@@ -1,31 +1,15 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const defaultTheme = require("tailwindcss/defaultTheme");
 const { fontFamily } = require("tailwindcss/defaultTheme");
+const { tailwindPreset } = require("kudu-ui-system/tailwindcss");
 
 /** @type {import('tailwindcss').Config} */
 export default {
   mode: "jit",
   content: ["./src/**/*.{astro,html,js,jsx,md,svelte,ts,tsx,vue}"],
+  presets: [tailwindPreset],
   theme: {
-    screens: {
-      xs: { min: "475px" },
-      ...defaultTheme.screens,
-      "max-md": { max: "767px" },
-    },
     fontFamily: {
       ChakraPetch: ["Chakra Petch", ...fontFamily.sans],
-    },
-    extend: {
-      containers: {
-        "2xs": "16rem",
-      },
-    },
-    colors: {
-      black: "#000000",
-      white: "#ffffff",
-    },
-    aspectRatio: {
-      "1/1": "1 / 1",
     },
   },
   daisyui: {
@@ -57,12 +41,4 @@ export default {
     rtl: false,
     prefix: "",
   },
-  plugins: [
-    function ({ addVariant }) {
-      addVariant("child", "& > *");
-    },
-    require("@tailwindcss/typography"),
-    require("@tailwindcss/container-queries"),
-    require("daisyui"),
-  ],
 };
