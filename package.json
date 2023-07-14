@@ -15,7 +15,7 @@
     "astro": "2.8.0",
     "astro-google-fonts-optimizer": "0.2.2",
     "@astrojs/tailwind": "4.0.0",
-    "kudu-components": "0.0.2",
+    "kudu-components": "0.0.8",
     "kudu-ui-system": "0.1.13",
     "postcss": "8.4.25",
     "svelte": "4.0.5",
