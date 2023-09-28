@@ -20,5 +20,8 @@
     "postcss": "8.4.30",
     "svelte": "4.2.1",
     "tailwindcss": "3.3.3"
+  },
+  "engines": {
+    "node": ">=18.15.0"
   }
 }
