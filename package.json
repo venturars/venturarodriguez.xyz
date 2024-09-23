@@ -19,7 +19,7 @@
     "kudu-ui-system": "0.1.22",
     "postcss": "8.4.30",
     "svelte": "4.2.1",
-    "tailwindcss": "3.3.3"
+    "tailwindcss": "3.4.13"
   },
   "engines": {
     "node": ">=18.15.0"
