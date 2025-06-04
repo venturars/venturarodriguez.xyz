@@ -1,6 +1,6 @@
 ---
-import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import "../styles/index.css";
+import EN from "../locales/EN.json";
 ---
 
 <html
@@ -13,16 +13,10 @@ import "../styles/index.css";
 >
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.jpg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
-    <title>Ventura Rodríguez ツ</title>
-    <meta
-      name="description"
-      content="I'm a web software engineer with expertise in web3 development."
-    />
-    <GoogleFontsOptimizer
-      url="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-    />
+    <title>{EN.pages.landing.title}</title>
+    <meta name="description" content={EN.pages.landing.description} />
     <script src="../scripts/splash-height.js"></script>
   </head>
   <body>
