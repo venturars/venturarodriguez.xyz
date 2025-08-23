@@ -1,7 +1,7 @@
 {
-  "name": "vigorous-virgo",
+  "name": "venturarodriguezxyz",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": "true",
   "scripts": {
     "dev": "astro dev",
@@ -12,13 +12,13 @@
   },
   "dependencies": {
     "@astrojs/svelte": "7.1.0",
-    "@tailwindcss/vite": "^4.1.8",
-    "astro": "5.8.1",
-    "daisyui": "^5.0.43",
-    "svelte": "5.33.14",
-    "tailwindcss": "^4.1.8"
+    "@tailwindcss/vite": "4.1.8",
+    "astro": "5.13.3",
+    "daisyui": "5.0.43",
+    "svelte": "5.38.2",
+    "tailwindcss": "4.1.8"
   },
   "engines": {
-    "node": ">=18.15.0"
+    "node": ">=22.16.0"
   }
 }
