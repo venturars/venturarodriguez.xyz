@@ -4,6 +4,6 @@
 
 @layer base {
   [data-theme="venturarodriguezxyz"] {
-    @apply bg-base-100 font-playfair;
+    @apply bg-base-100 font-lato text-base-content;
   }
 }
