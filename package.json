@@ -15,7 +15,7 @@
     "@tailwindcss/vite": "4.1.8",
     "astro": "5.13.3",
     "daisyui": "5.0.50",
-    "svelte": "5.38.2",
+    "svelte": "5.53.12",
     "tailwindcss": "4.1.8"
   },
   "engines": {
