@@ -7,14 +7,16 @@ import Footer from "../components/Footer.astro";
 <MainLayout>
   <Header />
   <div
-    class="md:h-[calc(100vh-3.5rem-3.5rem)] w-screen bg-primary text-base-200"
+    class="md:h-[calc(100vh-3.5rem-3.5rem)] h-[calc(100vh-152px-3rem)] w-screen bg-primary text-base-200"
   >
-    <div class="flex flex-col items-center justify-center h-full">
-      <p class="text-center text-2xl">
+    <div
+      class="flex flex-col items-center justify-center h-full px-8 max-md:px-4"
+    >
+      <p class="text-center text-2xl max-md:text-xl">
         I'm currently working on the content of my website, please check back
         soon!
       </p>
-      <p class="text-center text-2xl">
+      <p class="text-center text-2xl max-md:text-xl">
         In the meantime, you can check out my Portfolio, GitHub, or LinkedIn.
       </p>
     </div>
