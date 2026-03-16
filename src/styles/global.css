@@ -1,12 +1,11 @@
 @import "tailwindcss";
 @plugin "daisyui";
-@import "tailwindcss/preflight";
-@tailwind utilities;
+@plugin "@tailwindcss/typography";
 
 [data-theme="venturarodriguezxyz"] {
   html,
   body {
-    @apply bg-base-100 font-lato;
+    @apply bg-base-200 font-lato text-base-content;
   }
 
   h1,
@@ -22,5 +21,39 @@
   span,
   a {
     @apply font-lato;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  .link-primary {
+    @apply text-primary-content;
+    &:hover {
+      @apply text-accent;
+    }
+  }
+
+  .btn-ghost:hover,
+  .btn-link:hover,
+  a:hover {
+    @apply text-primary-content;
+  }
+
+  .prose {
+    @apply text-base-content;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    @apply text-base-content;
+  }
+
+  .prose a {
+    @apply text-accent underline decoration-accent underline-offset-2;
   }
 }
