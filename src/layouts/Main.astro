@@ -3,21 +3,13 @@ import "../styles/index.css";
 import EN from "../locales/EN.json";
 ---
 
-<html
-  lang="en"
-  dir="ltr"
-  data-theme="venturarodriguezxyz"
-  style={{
-    ["--splash-height" as any]: "100vh",
-  }}
->
+<html lang="en" dir="ltr" data-theme="venturarodriguezxyz">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <title>{EN.pages.landing.title}</title>
     <meta name="description" content={EN.pages.landing.description} />
-    <script src="../scripts/splash-height.js"></script>
   </head>
   <body>
     <slot />
