@@ -1,0 +1,26 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@import "tailwindcss/preflight";
+@tailwind utilities;
+
+[data-theme="venturarodriguezxyz"] {
+  html,
+  body {
+    @apply bg-base-100 font-lato;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-playfair;
+  }
+
+  p,
+  span,
+  a {
+    @apply font-lato;
+  }
+}

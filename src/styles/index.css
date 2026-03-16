@@ -1,9 +1,9 @@
-@import "./tailwind.css";
-@import "./daisy-link.css";
-@import "./daisy-button.css";
+@import "./fonts.css";
+@import "./global.css";
+@import "./theme.css";
 
 @layer base {
   [data-theme="venturarodriguezxyz"] {
-    @apply bg-base-100 font-ChakraPetch;
+    @apply bg-base-100 font-lato text-base-content;
   }
 }
