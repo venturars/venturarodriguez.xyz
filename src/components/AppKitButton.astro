@@ -1,0 +1,101 @@
+---
+import WalletIcon from "./icons/WalletIcon.astro";
+---
+
+<script>
+  import { createAppKit } from "@reown/appkit";
+  import { base, mainnet, polygon } from "@reown/appkit/networks";
+  import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
+  import { getAccount, watchAccount } from "@wagmi/core";
+
+  const projectId = "f168c45a3784d817b6572b95a96ecf80";
+
+  const wagmiAdapter = new WagmiAdapter({
+    projectId,
+    networks: [base, mainnet, polygon],
+  });
+
+  const metadata = {
+    name: "venturarodriguez.xyz",
+    description: "Venture Rodriguez personal site",
+    url: "https://venturarodriguez.xyz",
+    icons: ["https://venturarodriguez.xyz/favicon.ico"],
+  };
+
+  const modal = createAppKit({
+    adapters: [wagmiAdapter],
+    networks: [base, mainnet, polygon],
+    metadata,
+    projectId,
+    allowUnsupportedChain: false,
+    enableNetworkSwitch: true,
+    features: {
+      analytics: false,
+      swaps: false,
+      onramp: false,
+    },
+    themeMode: "light",
+    themeVariables: {
+      "--w3m-font-family": "'Lato', sans-serif",
+      "--w3m-accent": "var(--color-accent)",
+      "--w3m-color-mix-strength": 20,
+      "--w3m-color-mix": "var(--color-base-300)",
+      "--w3m-border-radius-master": "0px",
+    },
+  });
+
+  function truncateAddress(address: string) {
+    return `${address.slice(0, 6)}…${address.slice(-4)}`;
+  }
+
+  function updateButtonState(
+    iconEl: HTMLElement | null,
+    textEl: HTMLElement | null,
+    address: string | undefined,
+  ) {
+    if (textEl) {
+      textEl.textContent = address
+        ? truncateAddress(address)
+        : "Connect your Wallet";
+    }
+    if (iconEl) {
+      iconEl.style.display = address ? "" : "none";
+    }
+  }
+
+  const connectBtn = document.getElementById(
+    "connect-wallet-btn",
+  ) as HTMLButtonElement | null;
+  const connectBtnIcon = document.getElementById(
+    "connect-wallet-btn-icon",
+  ) as HTMLElement | null;
+  const connectBtnText = document.getElementById(
+    "connect-wallet-btn-text",
+  ) as HTMLElement | null;
+
+  connectBtn?.addEventListener("click", () => modal.open());
+
+  // Initial state
+  updateButtonState(
+    connectBtnIcon,
+    connectBtnText,
+    getAccount(wagmiAdapter.wagmiConfig).address,
+  );
+
+  // Subscribe to connection changes
+  watchAccount(wagmiAdapter.wagmiConfig, {
+    onChange(data) {
+      updateButtonState(connectBtnIcon, connectBtnText, data.address);
+    },
+  });
+</script>
+
+<button
+  id="connect-wallet-btn"
+  class="link link-primary no-underline min-w-max inline-flex items-center gap-2"
+>
+  <span id="connect-wallet-btn-icon" style="display: none">
+    <WalletIcon class="size-5 shrink-0" />
+  </span>
+  <span id="connect-wallet-btn-text">Connect your Wallet</span>
+</button>
