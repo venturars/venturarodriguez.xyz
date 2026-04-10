@@ -1,6 +1,7 @@
 ---
 import "../styles/index.css";
 import EN from "../locales/EN.json";
+import TransactionToast from "../components/TransactionToast.svelte";
 ---
 
 <html lang="en" dir="ltr" data-theme="venturarodriguezxyz">
@@ -13,5 +14,6 @@ import EN from "../locales/EN.json";
   </head>
   <body>
     <slot />
+    <TransactionToast client:load />
   </body>
 </html>

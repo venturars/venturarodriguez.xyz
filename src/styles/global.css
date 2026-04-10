@@ -40,6 +40,26 @@
     @apply text-primary-content;
   }
 
+  .btn-error {
+    @apply bg-error text-error-content border-none;
+  }
+
+  button:disabled.btn-neutral {
+    @apply bg-neutral/60;
+  }
+
+  button:disabled.btn-outline {
+    @apply bg-neutral/20;
+  }
+
+  button:disabled.btn-error {
+    @apply bg-error/60;
+  }
+
+  .input-neutral {
+    @apply text-base-content;
+  }
+
   .prose {
     @apply text-base-content;
   }

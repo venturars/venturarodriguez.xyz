@@ -1,0 +1,81 @@
+---
+import WalletIcon from "./icons/WalletIcon.astro";
+---
+
+<script>
+  import { getConnection, watchConnection } from "@wagmi/core";
+  import {
+    appKitModal,
+    setupWalletStoreSync,
+    wagmiConfig,
+  } from "../libs/appkit";
+
+  /**
+   * Compact wallet address representation for header UI.
+   * Example: `0x1234567890abcdef...` => `0x1234…cdef`.
+   */
+  function truncateAddress(address: string) {
+    return `${address.slice(0, 6)}…${address.slice(-4)}`;
+  }
+
+  /**
+   * Reflects wallet connection state in button icon + label.
+   *
+   * - Connected: shows truncated address and wallet icon.
+   * - Disconnected: shows connect prompt and hides wallet icon.
+   */
+  function updateButtonState(
+    iconEl: HTMLElement | null,
+    textEl: HTMLElement | null,
+    address: string | undefined,
+  ) {
+    if (textEl) {
+      textEl.textContent = address
+        ? truncateAddress(address)
+        : "Connect your Wallet";
+    }
+    if (iconEl) {
+      iconEl.style.display = address ? "" : "none";
+    }
+  }
+
+  const connectBtn = document.getElementById(
+    "connect-wallet-btn",
+  ) as HTMLButtonElement | null;
+  const connectBtnIcon = document.getElementById(
+    "connect-wallet-btn-icon",
+  ) as HTMLElement | null;
+  const connectBtnText = document.getElementById(
+    "connect-wallet-btn-text",
+  ) as HTMLElement | null;
+
+  connectBtn?.addEventListener("click", () => appKitModal.open());
+
+  setupWalletStoreSync();
+
+  updateButtonState(
+    connectBtnIcon,
+    connectBtnText,
+    getConnection(wagmiConfig)?.address,
+  );
+
+  watchConnection(wagmiConfig, {
+    onChange() {
+      updateButtonState(
+        connectBtnIcon,
+        connectBtnText,
+        getConnection(wagmiConfig)?.address,
+      );
+    },
+  });
+</script>
+
+<button
+  id="connect-wallet-btn"
+  class="link link-primary no-underline min-w-max inline-flex items-center gap-2"
+>
+  <span id="connect-wallet-btn-icon" style="display: none">
+    <WalletIcon class="size-5 shrink-0" />
+  </span>
+  <span id="connect-wallet-btn-text">Connect your Wallet</span>
+</button>
