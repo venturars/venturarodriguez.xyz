@@ -14,10 +14,9 @@ import { walletAddress, walletChainId } from "../stores/user";
  * Public Reown/AppKit project id exposed to the client runtime.
  * Required because AppKit runs in browser context.
  */
-const projectId = import.meta.env.PUBLIC_REOWN_PROJECT_ID;
-if (!projectId) {
-  throw new Error("Missing PUBLIC_REOWN_PROJECT_ID environment variable");
-}
+const DEFAULT_REOWN_PROJECT_ID = "f168c45a3784d817b6572b95a96ecf80";
+const projectId =
+  import.meta.env.PUBLIC_REOWN_PROJECT_ID ?? DEFAULT_REOWN_PROJECT_ID;
 
 /**
  * Networks enabled across wallet connect + network switching flows.

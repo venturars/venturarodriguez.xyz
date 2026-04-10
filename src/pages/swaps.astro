@@ -12,10 +12,10 @@ import NetworkSwitcherButton from "../components/NetworkSwitcherButton.svelte";
     class="md:min-h-[calc(100vh-3.5rem-3.5rem)] min-h-[calc(100vh-152px-3rem)] w-screen bg-neutral"
   >
     <div class="pt-4 pl-8">
-      <NetworkSwitcherButton client:load />
+      <NetworkSwitcherButton client:only="svelte" />
     </div>
     <div class="w-full pb-24 pt-12">
-      <SwapForm client:load />
+      <SwapForm client:only="svelte" />
     </div>
   </div>
   <Footer />
