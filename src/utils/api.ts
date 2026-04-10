@@ -40,7 +40,13 @@ export function validateSupportedChainId(
 }
 
 export function validateRequiredEnv(envName: string): string {
-  const raw = (import.meta.env as Record<string, unknown>)[envName];
+  const rawFromImportMeta = (import.meta.env as Record<string, unknown>)[envName];
+  const rawFromProcess =
+    typeof process !== "undefined" ? process.env?.[envName] : undefined;
+  const raw =
+    typeof rawFromImportMeta === "string" && rawFromImportMeta.trim() !== ""
+      ? rawFromImportMeta
+      : rawFromProcess;
   if (typeof raw !== "string" || raw.trim() === "") {
     throw new Error(`${envName} not configured`);
   }
