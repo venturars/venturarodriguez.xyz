@@ -2,13 +2,21 @@
 import MainLayout from "../layouts/Main.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import SwapForm from "../components/SwapForm.svelte";
+import NetworkSwitcherButton from "../components/NetworkSwitcherButton.svelte";
 ---
 
 <MainLayout>
   <Header />
   <div
-    class="md:h-[calc(100vh-3.5rem-3.5rem)] h-[calc(100vh-152px-3rem)] min-h-max w-screen bg-neutral text-base-200"
+    class="md:min-h-[calc(100vh-3.5rem-3.5rem)] min-h-[calc(100vh-152px-3rem)] w-screen bg-neutral"
   >
+    <div class="pt-4 pl-8">
+      <NetworkSwitcherButton client:load />
+    </div>
+    <div class="w-full pb-24 pt-12">
+      <SwapForm client:load />
+    </div>
   </div>
   <Footer />
 </MainLayout>

@@ -3,51 +3,27 @@ import WalletIcon from "./icons/WalletIcon.astro";
 ---
 
 <script>
-  import { createAppKit } from "@reown/appkit";
-  import { base, mainnet, polygon } from "@reown/appkit/networks";
-  import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
-  import { getAccount, watchAccount } from "@wagmi/core";
+  import { getConnection, watchConnection } from "@wagmi/core";
+  import {
+    appKitModal,
+    setupWalletStoreSync,
+    wagmiConfig,
+  } from "../libs/appkit";
 
-  const projectId = "f168c45a3784d817b6572b95a96ecf80";
-
-  const wagmiAdapter = new WagmiAdapter({
-    projectId,
-    networks: [base, mainnet, polygon],
-  });
-
-  const metadata = {
-    name: "venturarodriguez.xyz",
-    description: "Venture Rodriguez personal site",
-    url: "https://venturarodriguez.xyz",
-    icons: ["https://venturarodriguez.xyz/favicon.ico"],
-  };
-
-  const modal = createAppKit({
-    adapters: [wagmiAdapter],
-    networks: [base, mainnet, polygon],
-    metadata,
-    projectId,
-    allowUnsupportedChain: false,
-    enableNetworkSwitch: true,
-    features: {
-      analytics: false,
-      swaps: false,
-      onramp: false,
-    },
-    themeMode: "light",
-    themeVariables: {
-      "--w3m-font-family": "'Lato', sans-serif",
-      "--w3m-accent": "var(--color-accent)",
-      "--w3m-color-mix-strength": 20,
-      "--w3m-color-mix": "var(--color-base-300)",
-      "--w3m-border-radius-master": "0px",
-    },
-  });
-
+  /**
+   * Compact wallet address representation for header UI.
+   * Example: `0x1234567890abcdef...` => `0x1234…cdef`.
+   */
   function truncateAddress(address: string) {
     return `${address.slice(0, 6)}…${address.slice(-4)}`;
   }
 
+  /**
+   * Reflects wallet connection state in button icon + label.
+   *
+   * - Connected: shows truncated address and wallet icon.
+   * - Disconnected: shows connect prompt and hides wallet icon.
+   */
   function updateButtonState(
     iconEl: HTMLElement | null,
     textEl: HTMLElement | null,
@@ -73,19 +49,23 @@ import WalletIcon from "./icons/WalletIcon.astro";
     "connect-wallet-btn-text",
   ) as HTMLElement | null;
 
-  connectBtn?.addEventListener("click", () => modal.open());
+  connectBtn?.addEventListener("click", () => appKitModal.open());
 
-  // Initial state
+  setupWalletStoreSync();
+
   updateButtonState(
     connectBtnIcon,
     connectBtnText,
-    getAccount(wagmiAdapter.wagmiConfig).address,
+    getConnection(wagmiConfig)?.address,
   );
 
-  // Subscribe to connection changes
-  watchAccount(wagmiAdapter.wagmiConfig, {
-    onChange(data) {
-      updateButtonState(connectBtnIcon, connectBtnText, data.address);
+  watchConnection(wagmiConfig, {
+    onChange() {
+      updateButtonState(
+        connectBtnIcon,
+        connectBtnText,
+        getConnection(wagmiConfig)?.address,
+      );
     },
   });
 </script>
