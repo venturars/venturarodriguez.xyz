@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@astrojs/svelte": "8.0.0",
+    "@astrojs/vercel": "10.0.4",
     "@reown/appkit": "1.8.19",
     "@reown/appkit-adapter-wagmi": "1.8.19",
     "@tailwindcss/vite": "4.2.1",
