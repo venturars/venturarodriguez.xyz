@@ -90,6 +90,16 @@
       recipientAddressError !== null,
   );
 
+  /**
+   * Builds a firm quote and submits the swap transaction.
+   *
+   * Flow:
+   * 1) Validate current form state and amount.
+   * 2) Request a firm quote from the backend.
+   * 3) Ensure quote still matches the latest displayed price within tolerance.
+   * 4) Send transaction and wait for confirmation.
+   * 5) Reset quote + amount fields on success.
+   */
   async function handleSubmit(e: Event) {
     e.preventDefault();
     if (isSubmitDisabled || !$walletAddress || !$walletChainId || !swapDetails)
@@ -163,6 +173,10 @@
     }
   }
 
+  /**
+   * Formats a raw USD numeric string into localized fiat output.
+   * Returns `undefined` when the value is missing or invalid.
+   */
   function formatOptionalUsd(raw?: string | null): string | undefined {
     if (!raw) return undefined;
     const usd = Number(raw);
@@ -183,6 +197,10 @@
     submitMessage = undefined;
   }
 
+  /**
+   * Resets swap state whenever the connected wallet network changes.
+   * Placeholder tokens are recreated for the active chain.
+   */
   $effect(() => {
     const activeChainId = $walletChainId ?? 1;
     tokenIn = buildPlaceholderTokenWithChainId(activeChainId);
@@ -195,6 +213,13 @@
     submitMessage = undefined;
   });
 
+  /**
+   * Debounced + auto-refreshing price effect.
+   *
+   * Triggers whenever quote inputs change (wallet, tokens, amount, slippage, fee,
+   * recipient). It performs an initial debounced request, then background refreshes
+   * every {@link PRICE_REFRESH_INTERVAL_MS} while dependencies remain stable.
+   */
   $effect(() => {
     if (!$walletAddress || !$walletChainId) return;
     const tokenInAddress = tokenIn.address;
