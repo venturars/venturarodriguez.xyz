@@ -6,6 +6,9 @@
   import { formatFiat, normalizeAmount } from "../utils/interface";
   import type { TokenWithBalance, TokenWithChainId } from "../sdk/types";
   import { formatUnits } from "viem";
+  import EN from "../locales/EN.json";
+
+  const locales = EN.components.tokenInput;
 
   /**
    * Token amount input with selector modal and fiat preview.
@@ -51,7 +54,7 @@
 
   const fiatValue = $derived.by((): string | null => {
     const amount = normalizeAmount(value);
-    if (fiatUnitPrice === null) return "-";
+    if (fiatUnitPrice === null) return locales.fiatUnavailableFallback;
     if (amount <= 0) return "0.00";
     return formatFiat(amount * fiatUnitPrice, fiatCurrency);
   });
@@ -189,7 +192,7 @@
       {#if isLoadingFiat}
         <span
           class="loading loading-spinner loading-sm"
-          aria-label="Loading fiat value"
+          aria-label={locales.loadingFiatValueAriaLabel}
         ></span>
       {:else}
         {fiatValue ?? ""}
@@ -205,7 +208,7 @@
         disabled={maxAmount === undefined}
         onclick={() => applyPreset(1)}
       >
-        MAX
+        {locales.maxPreset}
       </button>
       <button
         type="button"
@@ -213,7 +216,7 @@
         disabled={maxAmount === undefined}
         onclick={() => applyPreset(0.5)}
       >
-        50%
+        {locales.halfPreset}
       </button>
       <button
         type="button"
@@ -221,7 +224,7 @@
         disabled={maxAmount === undefined}
         onclick={() => applyPreset(0.25)}
       >
-        25%
+        {locales.quarterPreset}
       </button>
     </div>
   {/if}

@@ -4,6 +4,9 @@
   import { formatTokenBalance } from "../sdk/utils";
   import { walletAddress, walletChainId } from "../stores/user";
   import type { TokenWithBalance, TokenWithChainId } from "../sdk/types";
+  import EN from "../locales/EN.json";
+
+  const locales = EN.components.tokenSelectorModal;
 
   /**
    * Modal for choosing a token on the active wallet chain: search by name, symbol, or contract
@@ -88,9 +91,9 @@
           rows = data;
           error = null;
         }
-      } catch (e) {
+      } catch {
         if (!cancelled) {
-          error = e instanceof Error ? e.message : "Failed to load tokens";
+          error = locales.failedToLoadTokens;
           rows = [];
         }
       } finally {
@@ -117,6 +120,7 @@
       type="submit"
       class="cursor-default w-full h-full min-w-0 min-h-0 p-0 border-0 bg-transparent"
     >
+      <!-- Intentionally hardcoded: dialog backdrop close control text -->
       close
     </button>
   </form>
@@ -125,13 +129,13 @@
   >
     <div class="flex items-center justify-between">
       <h3 class="font-playfair text-lg font-semibold text-base-content">
-        Select a token
+        {locales.title}
       </h3>
       <button
         type="button"
         class="btn btn-ghost btn-md btn-circle text-base-content"
         onclick={close}
-        aria-label="Close"
+        aria-label={locales.closeAriaLabel}
       >
         ✕
       </button>
@@ -139,7 +143,7 @@
 
     <input
       type="search"
-      placeholder="Search by name, symbol or contract address"
+      placeholder={locales.searchPlaceholder}
       bind:value={searchQuery}
       disabled={!$walletAddress || $walletChainId === undefined}
       class="input input-neutral w-full border-base-300 input-md min-h-9 disabled:opacity-50"
@@ -148,20 +152,22 @@
     <div class="overflow-y-auto flex-1 min-h-0 divide-y divide-base-300">
       {#if !$walletAddress}
         <p class="py-6 text-center text-base-content/70 px-2">
-          Connect your wallet to search tokens, see your balances, and select
-          one.
+          {locales.connectWalletMessage}
         </p>
       {:else if $walletChainId === undefined}
         <p class="py-6 text-center text-base-content/70 px-2">
-          No active chain detected. Open your wallet and select a supported
-          network.
+          {locales.noActiveChainMessage}
         </p>
       {:else if loading}
-        <p class="py-6 text-center text-base-content/70">Loading tokens…</p>
+        <p class="py-6 text-center text-base-content/70">
+          {locales.loadingTokens}
+        </p>
       {:else if error}
         <p class="py-6 text-center text-error">{error}</p>
       {:else if rows.length === 0}
-        <p class="py-6 text-center text-base-content/70">No tokens found</p>
+        <p class="py-6 text-center text-base-content/70">
+          {locales.noTokensFound}
+        </p>
       {:else}
         {#each rows as token (token.chainId + ":" + token.address + ":" + token.symbol + ":list")}
           <button

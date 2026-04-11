@@ -7,6 +7,9 @@
   import { walletAddress, walletChainId } from "../stores/user";
   import { getTransactionErrorMessage } from "../utils/interface";
   import type { Address, Hex } from "viem";
+  import EN from "../locales/EN.json";
+
+  const locales = EN.components.submitTransaction;
 
   type SubmitType = "button" | "submit" | "reset";
 
@@ -53,7 +56,7 @@
       const chainId = $walletChainId;
 
       if (!ownerAddress || !chainId) {
-        allowanceError = "Connect your wallet to approve allowance.";
+        allowanceError = locales.connectWalletToApproveAllowance;
         return;
       }
 
@@ -73,9 +76,9 @@
           if (!isConfirmed) {
             transactionToastStore.showFailed(
               txHash,
-              "Approval transaction failed or was reverted.",
+              locales.approvalFailedOrReverted,
             );
-            allowanceError = "Approval transaction failed or was reverted.";
+            allowanceError = locales.approvalFailedOrReverted;
             return;
           }
           transactionToastStore.showConfirmed(txHash);
@@ -136,7 +139,7 @@
       } catch {
         if (cancelled) return;
         hasSufficientAllowance = null;
-        allowanceError = "Could not verify token allowance. Please try again.";
+        allowanceError = locales.allowanceVerificationFailed;
       } finally {
         if (!cancelled) isAllowanceLoading = false;
       }
@@ -149,7 +152,7 @@
 
   const ctaText = $derived(
     isApprovingAllowance
-      ? "Approving..."
+      ? locales.approving
       : hasSufficientAllowance === false
         ? allowance?.text
         : text,

@@ -1,5 +1,6 @@
 import { get, writable } from "svelte/store";
 import { walletChainId } from "./user";
+import EN from "../locales/EN.json";
 
 export type TransactionToastStatus = "sending" | "confirmed" | "failed";
 
@@ -12,6 +13,7 @@ export interface TransactionToastState {
 
 const txToast = writable<TransactionToastState | null>(null);
 let clearTimer: ReturnType<typeof setTimeout> | undefined;
+const locales = EN.components.transactionToast.messages;
 
 function scheduleClear(delayMs: number): void {
   if (clearTimer) clearTimeout(clearTimer);
@@ -36,7 +38,7 @@ export const transactionToastStore = {
       chainId: getCurrentChainId(),
       hash,
       status: "sending",
-      message: "Transaction submitted. Waiting for confirmation...",
+      message: locales.sending,
     });
   },
   showConfirmed(hash: `0x${string}`): void {
@@ -44,11 +46,11 @@ export const transactionToastStore = {
       chainId: getCurrentChainId(),
       hash,
       status: "confirmed",
-      message: "Transaction confirmed.",
+      message: locales.confirmed,
     });
     scheduleClear(8000);
   },
-  showFailed(hash: `0x${string}`, message = "Transaction failed."): void {
+  showFailed(hash: `0x${string}`, message = locales.failedDefault): void {
     txToast.set({
       chainId: getCurrentChainId(),
       hash,

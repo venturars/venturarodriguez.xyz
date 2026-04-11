@@ -1,4 +1,7 @@
 <script lang="ts">
+  import EN from "../locales/EN.json";
+
+  const locales = EN.components.platformFeeInput;
   const PRESETS_PERCENT = [0.15, 0.2, 0.5];
 
   /**
@@ -11,8 +14,8 @@
    */
   let {
     platformFeePercent = $bindable(0),
-    label = "Support fee (optional)",
-    tooltip = "venturarodriguez.xyz does not charge fees for facilitating swaps. If you want to support my work, you can add an optional support fee to help maintain the tool.",
+    label = locales.label,
+    tooltip = locales.tooltip,
     className = "",
   }: {
     platformFeePercent?: number;
@@ -63,7 +66,7 @@
       <span>{label}</span>
       <span
         class="h-4 w-4 rounded-full border border-base-200 text-center text-[10px] leading-[14px] text-base-200"
-        aria-label="Support fee info"
+        aria-label={locales.infoAriaLabel}
       >
         ?
       </span>
@@ -78,7 +81,7 @@
         : 'btn-ghost btn-outline'}"
       onclick={() => selectPreset(0)}
     >
-      No fee
+      {locales.noFee}
     </button>
 
     {#each PRESETS_PERCENT as preset}
@@ -100,7 +103,7 @@
         oninput={handleInput}
         inputmode="decimal"
         pattern="[0-9]*[.,]?[0-9]*"
-        placeholder="Custom %"
+        placeholder={locales.customPlaceholder}
         class="grow bg-transparent text-right"
       />
       <span>%</span>

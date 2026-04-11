@@ -1,5 +1,8 @@
 <script lang="ts">
   import StatusMessage from "./StatusMessage.svelte";
+  import EN from "../locales/EN.json";
+
+  const locales = EN.components.swapDetails;
 
   interface Props {
     tokenInAmount: string;
@@ -35,8 +38,8 @@
   }: Props = $props();
 
   function formatRate(rate: number): string {
-    if (!Number.isFinite(rate) || rate <= 0) return "-";
-    if (rate < 0.000001) return "< 0.000001";
+    if (!Number.isFinite(rate) || rate <= 0) return locales.rateFallback;
+    if (rate < 0.000001) return locales.rateLessThanMinimum;
     const maximumFractionDigits = rate < 1 ? 8 : 6;
     return rate.toLocaleString("en-US", {
       minimumFractionDigits: 2,
@@ -118,25 +121,25 @@
     <div class="min-h-[92px] flex items-center justify-center">
       <span
         class="loading loading-spinner w-16 h-16"
-        aria-label="Loading swap details"
+        aria-label={locales.loadingAriaLabel}
       ></span>
     </div>
   {:else}
     <div class="flex justify-between items-center">
-      <span>Rate</span>
+      <span>{locales.rateLabel}</span>
       <span>
         1 {tokenInSymbol} =
         {details.rate !== null
           ? ` ${formatRate(details.rate)} ${tokenOutSymbol}`
-          : " -"}
+          : ` ${locales.rateFallback}`}
       </span>
     </div>
     <div class="flex justify-between items-center">
       <span
         class="tooltip tooltip-right cursor-help"
-        data-tip="The minimum amount you will receive if the price moves unfavorably before your transaction is confirmed. Based on your slippage tolerance."
+        data-tip={locales.minimumReceived.tooltip}
       >
-        Minimum received
+        {locales.minimumReceived.label}
       </span>
       <span>
         {details.minReceivedToken}
@@ -149,9 +152,9 @@
     <div class="flex justify-between items-center">
       <span
         class="tooltip tooltip-right cursor-help underline"
-        data-tip="The estimated market impact from the swap itself, excluding route fees."
+        data-tip={locales.swapPriceImpact.tooltip}
       >
-        Swap price impact
+        {locales.swapPriceImpact.label}
       </span>
       <span
         >{details.swapPriceImpactPercent} ({details.swapPriceImpactUsd})</span
@@ -160,25 +163,25 @@
     <div class="flex justify-between items-center">
       <span
         class="tooltip tooltip-right cursor-help underline"
-        data-tip="Extra impact caused by fees in this route."
+        data-tip={locales.feePriceImpact.tooltip}
       >
-        Fee price impact
+        {locales.feePriceImpact.label}
       </span>
       <span>{details.feePriceImpactPercent} ({details.feePriceImpactUsd})</span>
     </div>
     <div class="flex justify-between items-center">
       <span
         class="tooltip tooltip-right cursor-help underline"
-        data-tip="The effect your trade has on the market price. Larger trades typically have higher impact, which may result in worse execution."
+        data-tip={locales.priceImpact.tooltip}
       >
-        Price impact
+        {locales.priceImpact.label}
       </span>
       <span>{details.priceImpactPercent} ({details.priceImpactUsd})</span>
     </div>
     {#if details.hasUnavailableData}
       <StatusMessage
         variant="warning"
-        message="Be careful, some data is unavailable for this swap."
+        message={locales.unavailableDataWarning}
         className="mt-4"
       />
     {/if}

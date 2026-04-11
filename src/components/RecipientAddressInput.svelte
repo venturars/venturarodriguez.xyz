@@ -1,4 +1,7 @@
 <script lang="ts">
+  import EN from "../locales/EN.json";
+
+  const locales = EN.components.recipientAddressInput;
   /**
    * Props for {@link RecipientAddressInput}.
    *
@@ -10,8 +13,8 @@
    */
   let {
     recipientAddress = $bindable(""),
-    label = "Recipient address (optional)",
-    tooltip = "Optional wallet address that will receive the output tokens. If you do not provide it, your connected address will be used.",
+    label = locales.label,
+    tooltip = locales.tooltip,
     error = null,
     className = "",
   }: {
@@ -49,7 +52,7 @@
       <span>{label}</span>
       <span
         class="h-4 w-4 rounded-full border border-base-200 text-center text-[10px] leading-[14px] text-secondary-content"
-        aria-label="Recipient address info"
+        aria-label={locales.infoAriaLabel}
       >
         ?
       </span>
@@ -62,7 +65,7 @@
       type="text"
       bind:value={recipientAddress}
       oninput={handleInput}
-      placeholder="0x..."
+      placeholder={locales.placeholder}
       autocomplete="off"
       class="grow"
     />
