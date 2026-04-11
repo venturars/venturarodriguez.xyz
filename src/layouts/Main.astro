@@ -22,6 +22,6 @@ const { title, description } = Astro.props;
   <body>
     <slot />
     <TransactionToast client:load />
-    <RiskAcknowledgmentGuard client:load />
+    <RiskAcknowledgmentGuard client:only="svelte" />
   </body>
 </html>
