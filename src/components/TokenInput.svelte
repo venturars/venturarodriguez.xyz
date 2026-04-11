@@ -138,7 +138,8 @@
         fiatUnitPrice = unitPrice;
         fiatCurrency = details.fiatCurrency || "USD";
         maxAmount = undefined;
-      } catch {
+      } catch (error) {
+        console.error("Error retrieving token details", error);
         if (cancelled) return;
         fiatUnitPrice = null;
         fiatCurrency = "USD";
