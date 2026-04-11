@@ -2,6 +2,9 @@ import { NATIVE_TOKEN_ADDRESS } from "../sdk/constants";
 import type { TokenWithChainId } from "../sdk/types";
 import { buildLogoUrl, getNetwork } from "../sdk/utils";
 import { formatUnits, parseUnits } from "viem";
+import EN from "../locales/EN.json";
+
+const locales = EN.utils.interface;
 
 export function buildPlaceholderTokenWithChainId(
   chainId: number,
@@ -95,12 +98,22 @@ export function getTransactionErrorMessage(error: unknown): string {
     normalized.includes("user cancel") ||
     normalized.includes("4001")
   ) {
-    return "Transaction cancelled in wallet.";
+    return locales.transactionErrors.cancelledInWallet;
   }
 
   if (normalized.includes("insufficient funds")) {
-    return "Insufficient funds to pay gas fees.";
+    return locales.transactionErrors.insufficientFundsForGas;
   }
 
-  return "Transaction failed. Please try again.";
+  return locales.transactionErrors.genericFailure;
+}
+
+export function interpolateTemplate(
+  template: string,
+  variables: Record<string, string | number>,
+): string {
+  return template.replace(/\{\{(\w+)\}\}/g, (match, key: string) => {
+    const value = variables[key];
+    return value === undefined ? match : String(value);
+  });
 }

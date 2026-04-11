@@ -1,4 +1,7 @@
 <script lang="ts">
+  import EN from "../locales/EN.json";
+
+  const locales = EN.components.slippageInput;
   const PRESETS = [0.1, 0.5, 1, 5];
 
   /**
@@ -11,8 +14,8 @@
    */
   let {
     slippage = $bindable(1),
-    label = "Slippage tolerance",
-    tooltip = "Slippage is the maximum price change you accept between the quote and execution. If the market moves more than this percentage, the transaction is cancelled.",
+    label = locales.label,
+    tooltip = locales.tooltip,
     className = "",
   }: {
     slippage?: number;
@@ -57,7 +60,7 @@
       <span>{label}</span>
       <span
         class="h-4 w-4 rounded-full border border-base-200 text-center text-[10px] leading-[14px] text-base-200"
-        aria-label="Slippage info"
+        aria-label={locales.infoAriaLabel}
       >
         ?
       </span>
@@ -84,7 +87,7 @@
         oninput={handleInput}
         inputmode="decimal"
         pattern="[0-9]*[.,]?[0-9]*"
-        placeholder="Custom"
+        placeholder={locales.customPlaceholder}
         class="grow bg-transparent text-right"
       />
       <span>%</span>

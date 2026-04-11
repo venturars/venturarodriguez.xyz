@@ -4,6 +4,10 @@
   import { SUPPORTED_NETWORKS } from "../sdk/constants";
   import { wagmiConfig } from "../libs/appkit";
   import { walletAddress, walletChainId } from "../stores/user";
+  import EN from "../locales/EN.json";
+  import { interpolateTemplate } from "../utils/interface";
+
+  const locales = EN.components.networkSwitcherModal;
 
   let open = $state(false);
   let isSwitching = $state(false);
@@ -38,11 +42,8 @@
     try {
       await switchChain(wagmiConfig, { chainId });
       close();
-    } catch (e) {
-      error =
-        e instanceof Error
-          ? e.message
-          : "Could not switch network. Please try again.";
+    } catch {
+      error = locales.switchFailedFallback;
     } finally {
       isSwitching = false;
     }
@@ -80,6 +81,7 @@
       type="submit"
       class="cursor-default w-full h-full min-w-0 min-h-0 p-0 border-0 bg-transparent"
     >
+      <!-- Intentionally hardcoded: dialog backdrop close control text -->
       close
     </button>
   </form>
@@ -88,13 +90,13 @@
   >
     <div class="flex items-center justify-between">
       <h3 class="font-playfair text-lg font-semibold text-base-content">
-        Select network
+        {locales.title}
       </h3>
       <button
         type="button"
         class="btn btn-ghost btn-md btn-circle text-base-content"
         onclick={close}
-        aria-label="Close"
+        aria-label={locales.closeAriaLabel}
       >
         ✕
       </button>
@@ -102,7 +104,7 @@
 
     <input
       type="search"
-      placeholder="Search network by name or chain ID"
+      placeholder={locales.searchPlaceholder}
       bind:value={searchQuery}
       disabled={!$walletAddress}
       class="input input-neutral w-full border-base-300 input-md min-h-9 disabled:opacity-50"
@@ -111,11 +113,11 @@
     <div class="overflow-y-auto flex-1 min-h-0 divide-y divide-base-300">
       {#if !$walletAddress}
         <p class="py-6 text-center text-base-content/70 px-2">
-          Connect your wallet to switch networks.
+          {locales.connectWalletMessage}
         </p>
       {:else if filteredNetworks.length === 0}
         <p class="py-6 text-center text-base-content/70 px-2">
-          No networks found
+          {locales.noNetworksFound}
         </p>
       {:else}
         {#each filteredNetworks as network (`network-${network.chainId}`)}
@@ -127,7 +129,12 @@
           >
             <TokenImage
               src={network.nativeCurrency.logo}
-              alt={`${network.name} logo`}
+              alt={interpolateTemplate(
+                EN.components.networkSwitcherButton.networkLogoAlt,
+                {
+                  name: network.name,
+                },
+              )}
               width={32}
               height={32}
             />
@@ -136,11 +143,15 @@
                 {network.name}
               </div>
               <div class="text-sm text-base-content/70">
-                Chain ID: {network.chainId}
+                {interpolateTemplate(locales.chainIdTemplate, {
+                  chainId: network.chainId,
+                })}
               </div>
             </div>
             {#if network.chainId === activeChainId}
-              <span class="badge badge-outline badge-success">Current</span>
+              <span class="badge badge-outline badge-success"
+                >{locales.currentBadge}</span
+              >
             {/if}
           </button>
         {/each}
@@ -151,7 +162,9 @@
       {#if error}
         <p class="text-sm text-error">{error}</p>
       {:else if isSwitching}
-        <p class="text-sm text-base-content/70">Switching network...</p>
+        <p class="text-sm text-base-content/70">
+          {locales.switchingNetwork}
+        </p>
       {:else}
         <p class="text-sm invisible">placeholder</p>
       {/if}

@@ -1,5 +1,8 @@
 ---
 import WalletIcon from "./icons/WalletIcon.astro";
+import EN from "../locales/EN.json";
+
+const locales = EN.components.appKitButton;
 ---
 
 <script>
@@ -11,61 +14,38 @@ import WalletIcon from "./icons/WalletIcon.astro";
   } from "../libs/appkit";
 
   /**
-   * Compact wallet address representation for header UI.
-   * Example: `0x1234567890abcdef...` => `0x1234…cdef`.
-   */
-  function truncateAddress(address: string) {
-    return `${address.slice(0, 6)}…${address.slice(-4)}`;
-  }
-
-  /**
    * Reflects wallet connection state in button icon + label.
    *
    * - Connected: shows truncated address and wallet icon.
    * - Disconnected: shows connect prompt and hides wallet icon.
    */
-  function updateButtonState(
-    iconEl: HTMLElement | null,
-    textEl: HTMLElement | null,
-    address: string | undefined,
-  ) {
-    if (textEl) {
-      textEl.textContent = address
-        ? truncateAddress(address)
-        : "Connect your Wallet";
+  function updateButtonState() {
+    const address = getConnection(wagmiConfig)?.address;
+    const connectWalletText = connectBtn?.dataset.connectWalletText ?? "";
+    if (connectBtnText) {
+      connectBtnText.textContent = address
+        ? `${address.slice(0, 6)}…${address.slice(-4)}`
+        : connectWalletText;
     }
-    if (iconEl) {
-      iconEl.style.display = address ? "" : "none";
+    if (connectBtnIcon) {
+      connectBtnIcon.style.display = address ? "" : "none";
     }
   }
 
-  const connectBtn = document.getElementById(
-    "connect-wallet-btn",
-  ) as HTMLButtonElement | null;
-  const connectBtnIcon = document.getElementById(
-    "connect-wallet-btn-icon",
-  ) as HTMLElement | null;
-  const connectBtnText = document.getElementById(
-    "connect-wallet-btn-text",
-  ) as HTMLElement | null;
+  const connectBtn = document.getElementById("connect-wallet-btn");
+  const connectBtnIcon =
+    document.getElementById("connect-wallet-btn-icon");
+  const connectBtnText = document.getElementById("connect-wallet-btn-text");
 
   connectBtn?.addEventListener("click", () => appKitModal.open());
 
   setupWalletStoreSync();
 
-  updateButtonState(
-    connectBtnIcon,
-    connectBtnText,
-    getConnection(wagmiConfig)?.address,
-  );
+  updateButtonState();
 
   watchConnection(wagmiConfig, {
     onChange() {
-      updateButtonState(
-        connectBtnIcon,
-        connectBtnText,
-        getConnection(wagmiConfig)?.address,
-      );
+      updateButtonState();
     },
   });
 </script>
@@ -73,9 +53,10 @@ import WalletIcon from "./icons/WalletIcon.astro";
 <button
   id="connect-wallet-btn"
   class="link link-primary no-underline min-w-max inline-flex items-center gap-2"
+  data-connect-wallet-text={locales.connectWallet}
 >
   <span id="connect-wallet-btn-icon" style="display: none">
     <WalletIcon class="size-5 shrink-0" />
   </span>
-  <span id="connect-wallet-btn-text">Connect your Wallet</span>
+  <span id="connect-wallet-btn-text">{locales.connectWallet}</span>
 </button>

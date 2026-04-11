@@ -1,8 +1,186 @@
 {
+  "footer": {
+    "name": "Ventura Rodríguez",
+    "role": "Certified Financial Advisor & DeFi Specialist",
+    "socialLinks": [
+      {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/ventura-rodriguez/",
+        "icon": "linkedin"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/venturars",
+        "icon": "github"
+      }
+    ],
+    "legalLinks": [
+      {
+        "label": "Terms of use",
+        "href": "/terms-of-use"
+      },
+      {
+        "label": "Privacy policy",
+        "href": "/privacy-policy"
+      }
+    ]
+  },
+  "header": {
+    "links": [
+      {
+        "label": "Website",
+        "href": "/"
+      },
+      {
+        "label": "Curriculum",
+        "href": "/curriculum.pdf",
+        "external": true
+      },
+      {
+        "label": "Portfolio",
+        "href": "https://portfolio.venturarodriguez.xyz",
+        "external": true
+      }
+    ]
+  },
+  "components": {
+    "appKitButton": {
+      "connectWallet": "Connect your Wallet"
+    },
+    "tokenInput": {
+      "loadingFiatValueAriaLabel": "Loading fiat value",
+      "maxPreset": "MAX",
+      "halfPreset": "50%",
+      "quarterPreset": "25%",
+      "fiatUnavailableFallback": "-"
+    },
+    "networkSwitcherButton": {
+      "selectActiveNetworkAriaLabel": "Select active network",
+      "disconnected": "Disconnected",
+      "unsupportedNetwork": "Unsupported network",
+      "networkLogoAlt": "{{name}} logo"
+    },
+    "networkSwitcherModal": {
+      "title": "Select network",
+      "closeAriaLabel": "Close",
+      "searchPlaceholder": "Search network by name or chain ID",
+      "connectWalletMessage": "Connect your wallet to switch networks.",
+      "noNetworksFound": "No networks found",
+      "chainIdTemplate": "Chain ID: {{chainId}}",
+      "currentBadge": "Current",
+      "switchingNetwork": "Switching network...",
+      "switchFailedFallback": "Could not switch network. Please try again."
+    },
+    "tokenSelectorModal": {
+      "title": "Select a token",
+      "closeAriaLabel": "Close",
+      "searchPlaceholder": "Search by name, symbol or contract address",
+      "connectWalletMessage": "Connect your wallet to search tokens, see your balances, and select one.",
+      "noActiveChainMessage": "No active chain detected. Open your wallet and select a supported network.",
+      "loadingTokens": "Loading tokens...",
+      "failedToLoadTokens": "Failed to load tokens",
+      "noTokensFound": "No tokens found"
+    },
+    "submitTransaction": {
+      "connectWalletToApproveAllowance": "Connect your wallet to approve allowance.",
+      "approvalFailedOrReverted": "Approval transaction failed or was reverted.",
+      "allowanceVerificationFailed": "Could not verify token allowance. Please try again.",
+      "approving": "Approving..."
+    },
+    "transactionToast": {
+      "closeAriaLabel": "Close transaction toast",
+      "txLabelTemplate": "Tx: {{hash}}",
+      "viewOnExplorer": "View on explorer",
+      "messages": {
+        "sending": "Transaction submitted. Waiting for confirmation...",
+        "confirmed": "Transaction confirmed.",
+        "failedDefault": "Transaction failed."
+      }
+    },
+    "swapDetails": {
+      "loadingAriaLabel": "Loading swap details",
+      "rateLabel": "Rate",
+      "rateFallback": "-",
+      "rateLessThanMinimum": "< 0.000001",
+      "minimumReceived": {
+        "label": "Minimum received",
+        "tooltip": "The minimum amount you will receive if the price moves unfavorably before your transaction is confirmed. Based on your slippage tolerance."
+      },
+      "swapPriceImpact": {
+        "label": "Swap price impact",
+        "tooltip": "The estimated market impact from the swap itself, excluding route fees."
+      },
+      "feePriceImpact": {
+        "label": "Fee price impact",
+        "tooltip": "Extra impact caused by fees in this route."
+      },
+      "priceImpact": {
+        "label": "Price impact",
+        "tooltip": "The effect your trade has on the market price. Larger trades typically have higher impact, which may result in worse execution."
+      },
+      "unavailableDataWarning": "Be careful, some data is unavailable for this swap."
+    },
+    "recipientAddressInput": {
+      "label": "Recipient address (optional)",
+      "tooltip": "Optional wallet address that will receive the output tokens. If you do not provide it, your connected address will be used.",
+      "infoAriaLabel": "Recipient address info",
+      "placeholder": "0x..."
+    },
+    "slippageInput": {
+      "label": "Slippage tolerance",
+      "tooltip": "Slippage is the maximum price change you accept between the quote and execution. If the market moves more than this percentage, the transaction is cancelled.",
+      "infoAriaLabel": "Slippage info",
+      "customPlaceholder": "Custom"
+    },
+    "platformFeeInput": {
+      "label": "Support fee (optional)",
+      "tooltip": "venturarodriguez.xyz does not charge fees for facilitating swaps. If you want to support my work, you can add an optional support fee to help maintain the tool.",
+      "infoAriaLabel": "Support fee info",
+      "noFee": "No fee",
+      "customPlaceholder": "Custom %"
+    }
+  },
+  "utils": {
+    "interface": {
+      "transactionErrors": {
+        "cancelledInWallet": "Transaction cancelled in wallet.",
+        "insufficientFundsForGas": "Insufficient funds to pay gas fees.",
+        "genericFailure": "Transaction failed. Please try again."
+      }
+    }
+  },
   "pages": {
     "landing": {
-      "title": "Ventura Rodríguez",
-      "description": "I am a web developer with over four years of experience and currently a student of Physics at UNED."
+      "title": "Ventura Rodríguez Investment Platform",
+      "description": "A toolkit for investing in blockchain.",
+      "tools": [
+        "Swapper"
+      ]
+    },
+    "swaps": {
+      "title": "Swapper",
+      "description": "Swap tokens with confidence.",
+      "form": {
+        "legendTokenIn": "You swap",
+        "legendTokenOut": "You receive",
+        "swapAriaLabel": "Swap input and output tokens",
+        "submit": "Swap",
+        "submitting": "Swapping...",
+        "approveAllowance": "Approve Allowance",
+        "errors": {
+          "invalidAmount": "Invalid sell amount.",
+          "recipientInvalid": "Recipient address is invalid.",
+          "insufficientBalance": "Insufficient {{symbol}} balance for this swap amount.",
+          "tokenMismatch": "Select different tokens to request a quote.",
+          "noLiquidity": "No liquidity is available for this swap right now.",
+          "quoteFetchFailed": "We could not fetch a swap quote right now. Please try again.",
+          "balanceFetchFailed": "Could not verify your token balance. Please try again.",
+          "txFailedOrReverted": "Swap transaction failed or was reverted."
+        },
+        "messages": {
+          "quoteChangedBeforeExecution": "Quote changed before execution: difference exceeds tolerance. Please review and try again."
+        }
+      }
     }
   }
 }

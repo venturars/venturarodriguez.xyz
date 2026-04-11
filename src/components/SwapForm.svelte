@@ -30,8 +30,14 @@
   import { retrieveTokenWithBalance } from "../sdk/user/retrieveTokenWithBalance";
   import { transactionToastStore } from "../stores/transactions";
   import { waitReceipt } from "../sdk/transactions/waitReceipt";
-  import { getTransactionErrorMessage } from "../utils/interface";
+  import {
+    getTransactionErrorMessage,
+    interpolateTemplate,
+  } from "../utils/interface";
   import { type Address } from "viem";
+  import EN from "../locales/EN.json";
+
+  const locales = EN.pages.swaps.form;
 
   let tokenIn = $state<TokenWithChainId>(
     buildPlaceholderTokenWithChainId($walletChainId ?? 1),
@@ -60,23 +66,23 @@
     const normalized = quoteError.toLowerCase();
 
     if (normalized.includes("tokenin and tokenout cannot be the same")) {
-      return "Select different tokens to request a quote.";
+      return locales.errors.tokenMismatch;
     }
     if (normalized.includes("no liquidity available")) {
-      return "No liquidity is available for this swap right now.";
+      return locales.errors.noLiquidity;
     }
     if (normalized.includes("failed to fetch swap price")) {
-      return "We could not fetch a swap quote right now. Please try again.";
+      return locales.errors.quoteFetchFailed;
     }
 
-    return quoteError;
+    return locales.errors.quoteFetchFailed;
   });
   const recipientAddressError = $derived.by(() => {
     const normalizedRecipientAddress = recipientAddress.trim();
     if (!normalizedRecipientAddress) return null;
     if (isValidAddress(normalizedRecipientAddress, { strict: false }))
       return null;
-    return "Recipient address is invalid.";
+    return locales.errors.recipientInvalid;
   });
   const hasInsufficientTokenInBalance = $derived.by(() => {
     if (tokenInBalance === undefined) return false;
@@ -88,7 +94,9 @@
   });
   const insufficientTokenBalanceError = $derived.by(() =>
     hasInsufficientTokenInBalance
-      ? `Insufficient ${tokenIn.symbol} balance for this swap amount.`
+      ? interpolateTemplate(locales.errors.insufficientBalance, {
+          symbol: tokenIn.symbol,
+        })
       : null,
   );
   const displaySubmitError = $derived.by(() => {
@@ -133,7 +141,7 @@
     const normalizedAmount = normalizeNumericInput(amountIn);
     const sellAmount = parseAmountToUnits(normalizedAmount, tokenInDecimals);
     if (sellAmount === null) {
-      submitMessage = { variant: "error", text: "Invalid sell amount." };
+      submitMessage = { variant: "error", text: locales.errors.invalidAmount };
       return;
     }
 
@@ -161,7 +169,7 @@
       if (!validation.acceptable) {
         submitMessage = {
           variant: "info",
-          text: `Quote changed before execution: ${"difference exceeds tolerance"}. Please review and try again.`,
+          text: locales.messages.quoteChangedBeforeExecution,
         };
         console.log(validation.reasons);
         return;
@@ -172,7 +180,7 @@
       transactionToastStore.showSending(txHash);
       const isConfirmed = await waitReceipt(txHash, $walletChainId);
       if (!isConfirmed) {
-        const message = "Swap transaction failed or was reverted.";
+        const message = locales.errors.txFailedOrReverted;
         transactionToastStore.showFailed(txHash, message);
         submitMessage = { variant: "error", text: message };
         return;
@@ -264,8 +272,7 @@
         console.error("Failed to retrieve token-in balance", error);
         if (cancelled) return;
         tokenInBalance = undefined;
-        tokenInBalanceError =
-          "Could not verify your token balance. Please try again.";
+        tokenInBalanceError = locales.errors.balanceFetchFailed;
       }
     })();
 
@@ -349,7 +356,9 @@
       } catch (error) {
         if (cancelled) return;
         quoteError =
-          error instanceof Error ? error.message : "Failed to fetch swap price";
+          error instanceof Error
+            ? error.message
+            : locales.errors.quoteFetchFailed;
         console.error("Failed to fetch swap price", error);
         swapDetails = undefined;
         amountOut = "";
@@ -379,7 +388,7 @@
 <div class="mx-auto w-lg bg-primary p-8">
   <form class="flex flex-col text-base-200" onsubmit={handleSubmit}>
     <TokenInput
-      legend="You swap"
+      legend={locales.legendTokenIn}
       bind:token={tokenIn}
       bind:value={amountIn}
       placeholder="0.0"
@@ -391,7 +400,7 @@
       <button
         type="button"
         class="btn btn-circle btn-md btn-neutral"
-        aria-label="Swap input and output tokens"
+        aria-label={locales.swapAriaLabel}
         onclick={swapTokens}
       >
         <SwapVerticalIcon className="size-6 text-primary-content" />
@@ -399,7 +408,7 @@
     </div>
 
     <TokenInput
-      legend="You receive"
+      legend={locales.legendTokenOut}
       bind:token={tokenOut}
       bind:value={amountOut}
       placeholder="0.0"
@@ -440,14 +449,14 @@
     <div class="divider"></div>
 
     <SubmitTransaction
-      text={isSubmitting ? "Swapping..." : "Swap"}
+      text={isSubmitting ? locales.submitting : locales.submit}
       className="btn btn-neutral btn-xl text-primary-content"
       error={displaySubmitError}
       message={displaySubmitMessage}
       disabled={isSubmitDisabled}
       allowance={swapDetails
         ? {
-            text: "Approve Allowance",
+            text: locales.approveAllowance,
             allowanceToken: swapDetails.tokenIn.address,
             allowanceAmount: swapDetails.tokenIn.amount,
             spenderAddress: swapDetails.allowanceTarget,

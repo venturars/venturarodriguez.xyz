@@ -1,6 +1,10 @@
 <script lang="ts">
   import { transactionToastStore } from "../stores/transactions";
   import { getNetwork } from "../sdk/utils";
+  import EN from "../locales/EN.json";
+  import { interpolateTemplate } from "../utils/interface";
+
+  const locales = EN.components.transactionToast;
 
   /**
    * Reactive transaction toast payload from global transaction store.
@@ -52,7 +56,7 @@
         <button
           type="button"
           class="btn btn-xs btn-square bg-transparent border-none text-inherit p-2"
-          aria-label="Close transaction toast"
+          aria-label={locales.closeAriaLabel}
           onclick={() => transactionToastStore.clear()}
         >
           ✕
@@ -62,7 +66,9 @@
         <p class="font-medium wrap-break-word">{txToast.message}</p>
         <div class="mt-1 flex items-center gap-2">
           <p class="text-xs opacity-80 break-all">
-            Tx: {shortenHash(txToast.hash)}
+            {interpolateTemplate(locales.txLabelTemplate, {
+              hash: shortenHash(txToast.hash),
+            })}
           </p>
           {#if explorerTxUrl}
             <a
@@ -71,7 +77,7 @@
               rel="noopener noreferrer"
               class="btn btn-ghost btn-xs min-h-0 h-6 px-2"
             >
-              View on explorer
+              {locales.viewOnExplorer}
             </a>
           {/if}
         </div>

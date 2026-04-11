@@ -3,6 +3,10 @@
   import TokenImage from "./TokenImage.svelte";
   import { SUPPORTED_NETWORKS } from "../sdk/constants";
   import { walletAddress, walletChainId } from "../stores/user";
+  import EN from "../locales/EN.json";
+  import { interpolateTemplate } from "../utils/interface";
+
+  const locales = EN.components.networkSwitcherButton;
 
   /**
    * Active network button for connected users:
@@ -32,22 +36,24 @@
   class={`btn btn-secondary btn-outline btn-md justify-between ${className}`}
   disabled={isDisconnected}
   onclick={handleOpenNetworkSwitcher}
-  aria-label="Select active network"
+  aria-label={locales.selectActiveNetworkAriaLabel}
 >
   <span class="flex items-center gap-2">
     {#if !isDisconnected && activeNetwork}
       <TokenImage
         src={activeNetwork.nativeCurrency.logo}
-        alt={`${activeNetwork.name} logo`}
+        alt={interpolateTemplate(locales.networkLogoAlt, {
+          name: activeNetwork.name,
+        })}
         width={20}
         height={20}
       />
     {/if}
     <span>
       {#if isDisconnected}
-        Disconnected
+        {locales.disconnected}
       {:else}
-        {activeNetwork?.name ?? "Unsupported network"}
+        {activeNetwork?.name ?? locales.unsupportedNetwork}
       {/if}
     </span>
   </span>

@@ -1,6 +1,12 @@
 ---
 import LinkedInIcon from "./icons/LinkedInIcon.astro";
 import GitHubIcon from "./icons/GitHubIcon.astro";
+import EN from "../locales/EN.json";
+
+const socialIconByName = {
+  linkedin: LinkedInIcon,
+  github: GitHubIcon,
+} as const;
 ---
 
 <footer
@@ -10,52 +16,54 @@ import GitHubIcon from "./icons/GitHubIcon.astro";
     class="flex items-center space-x-2 text-primary-content md:col-span-1 min-w-max"
   >
     <address class="not-italic font-playfair cursor-default">
-      Ventura Rodríguez
+      {EN.footer.name}
     </address>
     <div class="cursor-default">-</div>
-    <span class="cursor-default"
-      >Certified Financial Advisor & DeFi Specialist</span
-    >
+    <span class="cursor-default">{EN.footer.role}</span>
   </span>
   <ul class="flex items-center md:justify-center space-x-3 md:col-span-1">
-    <li class="grid place-content-center">
-      <a
-        href="https://www.linkedin.com/in/ventura-rodriguez/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="child:w-8 child:h-8 link link-primary"
-        aria-label="LinkedIn"
-      >
-        <LinkedInIcon />
-      </a>
-    </li>
-    <li class="grid place-content-center">
-      <a
-        href="https://github.com/venturars"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="child:w-8 child:h-8 link link-primary"
-        aria-label="GitHub"
-      >
-        <GitHubIcon />
-      </a>
-    </li>
+    {
+      EN.footer.socialLinks.map((item) => {
+        const Icon =
+          socialIconByName[item.icon as keyof typeof socialIconByName];
+        if (!Icon) return null;
+
+        return (
+          <li class="grid place-content-center">
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="child:w-8 child:h-8 link link-primary"
+              aria-label={item.label}
+            >
+              <Icon />
+            </a>
+          </li>
+        );
+      })
+    }
   </ul>
   <ul class="flex items-center md:justify-end space-x-2 md:col-span-1">
-    <li>
-      <a
-        href="/terms-of-use"
-        class="link link-primary no-underline"
-        target="_blank">Terms of use</a
-      >
-    </li>
-    <div class="cursor-default text-primary-content">|</div>
-    <li>
-      <a
-        href="/privacy-policy"
-        class="link link-primary no-underline"
-        target="_blank">Privacy policy</a
-      >
-    </li>
+    {
+      EN.footer.legalLinks.map((item, index) => (
+        <>
+          <li>
+            <a
+              href={item.href}
+              class="link link-primary no-underline"
+              target="_blank"
+            >
+              {item.label}
+            </a>
+          </li>
+          {index < EN.footer.legalLinks.length - 1 && (
+            <li class="cursor-default text-primary-content" aria-hidden="true">
+              |
+            </li>
+          )}
+        </>
+      ))
+    }
   </ul>
 </footer>

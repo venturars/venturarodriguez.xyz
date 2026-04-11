@@ -2,6 +2,13 @@
 import "../styles/index.css";
 import EN from "../locales/EN.json";
 import TransactionToast from "../components/TransactionToast.svelte";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
 ---
 
 <html lang="en" dir="ltr" data-theme="venturarodriguezxyz">
@@ -9,8 +16,8 @@ import TransactionToast from "../components/TransactionToast.svelte";
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
-    <title>{EN.pages.landing.title}</title>
-    <meta name="description" content={EN.pages.landing.description} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
   </head>
   <body>
     <slot />
