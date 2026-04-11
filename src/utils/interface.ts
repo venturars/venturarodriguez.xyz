@@ -27,7 +27,7 @@ export function normalizeNumericInput(raw: string): string {
   return raw.trim().replace(",", ".");
 }
 
-export function hasValidPositiveSwapAmount(raw: string): boolean {
+export function hasValidPositiveAmount(raw: string): boolean {
   const parsed = Number(raw);
   return Number.isFinite(parsed) && parsed > 0;
 }

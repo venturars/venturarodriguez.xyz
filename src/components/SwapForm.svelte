@@ -12,7 +12,7 @@
     formatBpsToPercent,
     formatFiat,
     formatTokenAmount,
-    hasValidPositiveSwapAmount,
+    hasValidPositiveAmount,
     parseAmountToUnits,
     normalizeNumericInput,
   } from "../utils/interface";
@@ -21,11 +21,13 @@
     invalidateWalletData,
     walletChainId,
     walletAddress,
+    walletDataEpoch,
   } from "../stores/user";
   import { getPrice } from "../sdk/swaps/0x/getPrice";
   import { getQuote } from "../sdk/swaps/0x/getQuote";
   import { submitQuoteTransaction } from "../sdk/swaps/0x/submitQuoteTransaction";
   import { validateQuoteAgainstPrice } from "../sdk/swaps/0x/validateQuoteAgainstPrice";
+  import { retrieveTokenWithBalance } from "../sdk/user/retrieveTokenWithBalance";
   import { transactionToastStore } from "../stores/transactions";
   import { waitReceipt } from "../sdk/transactions/waitReceipt";
   import { getTransactionErrorMessage } from "../utils/interface";
@@ -39,6 +41,7 @@
   );
   let amountIn = $state("");
   let amountOut = $state("");
+  let tokenInBalance = $state<bigint | undefined>(undefined);
   let slippage = $state(0.5);
   let platformFeePercent = $state(0.15);
   let recipientAddress = $state("");
@@ -46,6 +49,7 @@
   let isLoadingQuote = $state(false);
   let isSubmitting = $state(false);
   let quoteError = $state<string | null>(null);
+  let tokenInBalanceError = $state<string | null>(null);
   let submitMessage = $state<
     { text: string; variant: "warning" | "info" | "error" } | undefined
   >(undefined);
@@ -74,8 +78,23 @@
       return null;
     return "Recipient address is invalid.";
   });
+  const hasInsufficientTokenInBalance = $derived.by(() => {
+    if (tokenInBalance === undefined) return false;
+    const normalizedAmount = normalizeNumericInput(amountIn);
+    if (!hasValidPositiveAmount(normalizedAmount)) return false;
+    const sellAmount = parseAmountToUnits(normalizedAmount, tokenIn.decimals);
+    if (sellAmount === null) return false;
+    return sellAmount > tokenInBalance;
+  });
+  const insufficientTokenBalanceError = $derived.by(() =>
+    hasInsufficientTokenInBalance
+      ? `Insufficient ${tokenIn.symbol} balance for this swap amount.`
+      : null,
+  );
   const displaySubmitError = $derived.by(() => {
     if (recipientAddressError) return recipientAddressError;
+    if (tokenInBalanceError) return tokenInBalanceError;
+    if (insufficientTokenBalanceError) return insufficientTokenBalanceError;
     if (submitMessage?.variant === "error") return submitMessage.text;
     return displayQuoteError;
   });
@@ -87,7 +106,8 @@
       isLoadingQuote ||
       isSubmitting ||
       swapDetails === undefined ||
-      recipientAddressError !== null,
+      recipientAddressError !== null ||
+      hasInsufficientTokenInBalance,
   );
 
   /**
@@ -214,6 +234,47 @@
   });
 
   /**
+   * Fetches the selected input token balance to block submits when amount exceeds funds.
+   */
+  $effect(() => {
+    if (!$walletAddress || !$walletChainId) {
+      tokenInBalance = undefined;
+      tokenInBalanceError = null;
+      return;
+    }
+
+    const epoch = $walletDataEpoch;
+    void epoch;
+    const tokenAddress = tokenIn.address;
+    const tokenChainId = tokenIn.chainId;
+    let cancelled = false;
+    tokenInBalanceError = null;
+
+    (async () => {
+      try {
+        const tokenWithBalance = await retrieveTokenWithBalance({
+          walletAddress: $walletAddress,
+          chainId: tokenChainId,
+          tokenAddress,
+        });
+        if (cancelled) return;
+        tokenInBalance = tokenWithBalance.balance;
+        tokenInBalanceError = null;
+      } catch (error) {
+        console.error("Failed to retrieve token-in balance", error);
+        if (cancelled) return;
+        tokenInBalance = undefined;
+        tokenInBalanceError =
+          "Could not verify your token balance. Please try again.";
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  });
+
+  /**
    * Debounced + auto-refreshing price effect.
    *
    * Triggers whenever quote inputs change (wallet, tokens, amount, slippage, fee,
@@ -229,7 +290,7 @@
     const slippageBps = Math.round(slippage * 100);
     const platformFeeBps = Math.round(platformFeePercent * 100);
     const normalizedAmount = normalizeNumericInput(amountIn);
-    if (!hasValidPositiveSwapAmount(normalizedAmount)) {
+    if (!hasValidPositiveAmount(normalizedAmount)) {
       swapDetails = undefined;
       amountOut = "";
       isLoadingQuote = false;
