@@ -3,6 +3,7 @@ import type { Network, TokenWithBalance } from "../types";
 import { NATIVE_TOKEN_ADDRESS, SUPPORTED_CHAIN_IDS } from "../constants";
 import { retrieveTokensWithBalance } from "./retrieveTokensWithBalance";
 import { isValidAddress } from "../utils";
+import { retrieveTokenWithDetails } from "../token/retrieveTokenWithDetails";
 
 export interface RetrieveTokenWithBalanceParams {
   walletAddress: Address;
@@ -12,7 +13,8 @@ export interface RetrieveTokenWithBalanceParams {
 
 /**
  * Retrieves one token row with balance/fiat metadata for a wallet on a chain.
- * Reuses `retrieveTokensWithBalance` and selects the requested token.
+ * Reuses `retrieveTokensWithBalance` and, if the token is not present (zero balance),
+ * falls back to `retrieveTokenWithDetails` returning `balance: 0n` and `fiatBalance: "0"`.
  */
 export async function retrieveTokenWithBalance(
   params: RetrieveTokenWithBalanceParams,
@@ -41,7 +43,12 @@ export async function retrieveTokenWithBalance(
   );
 
   if (!match) {
-    throw new Error("Token with balance not found");
+    const tokenWithDetails = await retrieveTokenWithDetails(chainId, tokenAddress);
+    return {
+      ...tokenWithDetails,
+      balance: 0n,
+      fiatBalance: "0",
+    };
   }
 
   return match;
