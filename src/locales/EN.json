@@ -1,7 +1,7 @@
 {
   "footer": {
     "name": "Ventura Rodríguez",
-    "role": "Certified Financial Advisor & DeFi Specialist",
+    "role": "Software Developer & Crypto Enthusiast",
     "socialLinks": [
       {
         "label": "LinkedIn",
@@ -133,11 +133,24 @@
       "customPlaceholder": "Custom"
     },
     "platformFeeInput": {
-      "label": "Support fee (optional)",
-      "tooltip": "venturarodriguez.xyz does not charge fees for facilitating swaps. If you want to support my work, you can add an optional support fee to help maintain the tool.",
+      "label": "Donation (optional)",
+      "tooltip": "This is a free tool. Optional donations help cover hosting costs. No fees are charged for swaps.",
       "infoAriaLabel": "Support fee info",
       "noFee": "No fee",
       "customPlaceholder": "Custom %"
+    },
+    "riskAcknowledgmentModal": {
+      "title": "Important Crypto Risk Warning",
+      "intro": "Before using this app with a connected wallet, you must acknowledge the following risks:",
+      "risks": [
+        "This is a technical tool only and does not provide financial advice.",
+        "Cryptocurrency activity can result in total loss of funds.",
+        "You retain full custody and responsibility for your wallet and private keys.",
+        "Blockchain transactions are irreversible once submitted.",
+        "You are solely responsible for compliance, taxes, and all usage outcomes."
+      ],
+      "acceptLabel": "I understand and accept",
+      "disconnectLabel": "Disconnect wallet"
     }
   },
   "utils": {
@@ -151,8 +164,8 @@
   },
   "pages": {
     "landing": {
-      "title": "Ventura Rodríguez Investment Platform",
-      "description": "A toolkit for investing in blockchain.",
+      "title": "Ventura Rodríguez - Crypto Tools",
+      "description": "Personal crypto utilities.",
       "tools": [
         "Swapper"
       ]

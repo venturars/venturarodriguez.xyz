@@ -1,7 +1,7 @@
 ---
 import "../styles/index.css";
-import EN from "../locales/EN.json";
 import TransactionToast from "../components/TransactionToast.svelte";
+import RiskAcknowledgmentGuard from "../components/RiskAcknowledgmentGuard.svelte";
 
 interface Props {
   title: string;
@@ -22,5 +22,6 @@ const { title, description } = Astro.props;
   <body>
     <slot />
     <TransactionToast client:load />
+    <RiskAcknowledgmentGuard client:load />
   </body>
 </html>
