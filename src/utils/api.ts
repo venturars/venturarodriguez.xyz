@@ -40,7 +40,9 @@ export function validateSupportedChainId(
 }
 
 export function validateRequiredEnv(envName: string): string {
-  const rawFromImportMeta = (import.meta.env as Record<string, unknown>)[envName];
+  const rawFromImportMeta = (import.meta.env as Record<string, unknown>)[
+    envName
+  ];
   const rawFromProcess =
     typeof process !== "undefined" ? process.env?.[envName] : undefined;
   const raw =
@@ -130,7 +132,10 @@ export async function getSwapFee(
   try {
     tokenDetails = await resolveTokenDetails(chainId, token);
   } catch (error) {
-    if (error instanceof Error && error.message.includes("Token price not available")) {
+    if (
+      error instanceof Error &&
+      error.message.includes("Token price not available")
+    ) {
       return null;
     }
     throw error;
