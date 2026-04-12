@@ -74,7 +74,7 @@
     "tokenSelectorModal": {
       "title": "Select a token",
       "closeAriaLabel": "Close",
-      "searchPlaceholder": "Search by name, symbol or contract address",
+      "searchPlaceholder": "Search by name, symbol, or contract address",
       "connectWalletMessage": "Connect your wallet to search tokens, see your balances, and select one.",
       "noActiveChainMessage": "No active chain detected. Open your wallet and select a supported network.",
       "loadingTokens": "Loading tokens...",

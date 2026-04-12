@@ -13,6 +13,7 @@
    */
   const COOKIE_KEY = "vr_risk_ack_wallets";
   const COOKIE_MAX_AGE_SECONDS = 31_536_000;
+const MODAL_BYPASS_PATHS = new Set(["/terms-of-use", "/privacy-policy"]);
 
   let showModal = $state(false);
   let lastWalletAddress = $state<string | undefined>(undefined);
@@ -25,6 +26,18 @@
   function normalizeAddress(address: string): string {
     return address.trim().toLowerCase();
   }
+
+/** Normalize route pathname for consistent matching. */
+function normalizePath(pathname: string): string {
+  const trimmedPath = pathname.trim().replace(/\/+$/, "");
+  return (trimmedPath.length > 0 ? trimmedPath : "/").toLowerCase();
+}
+
+/** Skip modal on legal pages so users can read required documents. */
+function shouldBypassRiskModalForCurrentPath(): boolean {
+  if (typeof window === "undefined") return false;
+  return MODAL_BYPASS_PATHS.has(normalizePath(window.location.pathname));
+}
 
   /** Read a cookie value by name from `document.cookie`. */
   function getCookieValue(name: string): string | undefined {
@@ -112,6 +125,12 @@
       ? normalizeAddress(connectedAddress)
       : undefined;
     const hasChangedWallet = normalizedAddress !== lastWalletAddress;
+
+    if (shouldBypassRiskModalForCurrentPath()) {
+      showModal = false;
+      lastWalletAddress = normalizedAddress;
+      return;
+    }
 
     if (!normalizedAddress) {
       if (lastWalletAddress) {
