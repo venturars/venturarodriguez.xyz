@@ -10,10 +10,10 @@ const socialIconByName = {
 ---
 
 <footer
-  class="md:h-14 grid grid-cols-3 bg-primary px-8 max-md:px-4 max-md:grid-cols-1 max-md:grid-rows-3 max-md:space-y-4 max-md:py-4"
+  class="grid w-full min-w-0 gap-4 bg-primary px-4 py-4 text-sm md:h-14 md:grid-cols-[1fr_auto_1fr] md:px-8 md:py-0 md:text-base"
 >
   <span
-    class="flex items-center space-x-2 text-primary-content md:col-span-1 min-w-max"
+    class="flex max-md:flex-wrap md:w-max items-center gap-x-2 gap-y-1 text-primary-content md:col-span-1"
   >
     <address class="not-italic font-playfair cursor-default">
       {EN.footer.name}
@@ -21,7 +21,7 @@ const socialIconByName = {
     <div class="cursor-default">-</div>
     <span class="cursor-default">{EN.footer.role}</span>
   </span>
-  <ul class="flex items-center md:justify-center space-x-3 md:col-span-1">
+  <ul class="flex items-center gap-3 md:col-span-1 md:justify-center w-fit">
     {
       EN.footer.socialLinks.map((item) => {
         const Icon =
@@ -34,7 +34,7 @@ const socialIconByName = {
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              class="child:w-8 child:h-8 link link-primary"
+              class="link link-primary child:h-7 child:w-7 md:child:h-8 md:child:w-8"
               aria-label={item.label}
             >
               <Icon />
@@ -44,7 +44,9 @@ const socialIconByName = {
       })
     }
   </ul>
-  <ul class="flex items-center md:justify-end space-x-2 md:col-span-1">
+  <ul
+    class="flex flex-wrap items-center gap-x-2 gap-y-1 text-primary-content md:col-span-1 md:justify-end"
+  >
     {
       EN.footer.legalLinks.map((item, index) => (
         <>

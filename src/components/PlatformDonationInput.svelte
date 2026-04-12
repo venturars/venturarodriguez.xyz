@@ -5,7 +5,7 @@
   const PRESETS_PERCENT = [0.15, 0.2, 0.5];
 
   /**
-   * Props for {@link PlatformFeeInput}.
+   * Props for {@link PlatformDonationInput}.
    *
    * @property {number} [platformFeePercent=0] - Platform fee percentage.
    * @property {string} [label="Support fee (optional)"] - Fieldset legend text.
@@ -60,7 +60,7 @@
 <fieldset class="fieldset {className}">
   <legend class="fieldset-legend text-base-200 text-base">
     <span
-      class="tooltip tooltip-right cursor-help inline-flex items-center gap-1"
+      class="tooltip tooltip-mobile-safe tooltip-right max-sm:tooltip-bottom cursor-help inline-flex min-w-0 flex-wrap items-center gap-1 wrap-break-word"
       data-tip={tooltip}
     >
       <span>{label}</span>
@@ -96,7 +96,7 @@
       </button>
     {/each}
 
-    <label class="input input-sm input-neutral flex-1 max-w-20">
+    <label class="input input-sm input-neutral flex-1 max-w-20 min-w-20">
       <input
         type="text"
         value={displayValue}

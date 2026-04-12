@@ -2,6 +2,7 @@
 import MainLayout from "../layouts/Main.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import PageSkeletonShell from "../components/PageSkeletonShell.astro";
 import EN from "../locales/EN.json";
 ---
 
@@ -9,19 +10,27 @@ import EN from "../locales/EN.json";
   title={EN.pages.landing.title}
   description={EN.pages.landing.description}
 >
-  <Header />
-  <div
-    class="md:h-[calc(100vh-3.5rem-3.5rem)] h-[calc(100vh-152px-3rem)] min-h-max w-screen bg-primary text-base-200"
-  >
-    <div class="flex items-center justify-center h-full gap-4">
-      {
-        EN.pages.landing.tools.map((tool) => (
-          <a href="/swaps" class="btn btn-ghost btn-xl outline outline-neutral">
-            {tool}
-          </a>
-        ))
-      }
+  <PageSkeletonShell mainSelector="#landing-main">
+    <Header />
+    <div
+      id="landing-main"
+      class="relative flex w-full items-center justify-center overflow-hidden bg-primary text-base-200"
+    >
+      <div
+        class="relative z-10 flex w-full flex-wrap items-center justify-center gap-4 px-4 py-6"
+      >
+        {
+          EN.pages.landing.tools.map((tool) => (
+            <a
+              href="/swaps"
+              class="btn btn-ghost sm:btn-xl btn-lg outline outline-neutral"
+            >
+              {tool}
+            </a>
+          ))
+        }
+      </div>
     </div>
-  </div>
-  <Footer />
+    <Footer />
+  </PageSkeletonShell>
 </MainLayout>

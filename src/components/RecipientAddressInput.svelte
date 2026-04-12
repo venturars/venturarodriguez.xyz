@@ -46,7 +46,7 @@
 <fieldset class="fieldset {className}">
   <legend class="fieldset-legend text-base-200 text-base">
     <span
-      class="tooltip tooltip-right cursor-help inline-flex items-center gap-1"
+      class="tooltip tooltip-mobile-safe tooltip-right max-sm:tooltip-bottom cursor-help inline-flex min-w-0 flex-wrap items-center gap-1 wrap-break-word"
       data-tip={tooltip}
     >
       <span>{label}</span>
@@ -67,7 +67,7 @@
       oninput={handleInput}
       placeholder={locales.placeholder}
       autocomplete="off"
-      class="grow"
+      class="grow min-w-0"
     />
   </label>
 </fieldset>
