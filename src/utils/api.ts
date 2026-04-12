@@ -7,7 +7,7 @@ import {
 } from "../sdk/constants";
 import { isValidAddress } from "../sdk/utils";
 import { amountToUsdScaled } from "../sdk/utils";
-import type { Network, SwapFee } from "../sdk/types";
+import type { Network, SwapFee, TokenWithChainId } from "../sdk/types";
 import { retrieveTokenWithDetails } from "../sdk/token/retrieveTokenWithDetails";
 import type { ResolveTokenDetails, ZeroExFeeEntry } from "../types/api";
 
@@ -177,4 +177,69 @@ export function getRedisClient(): Redis | null {
   }
 
   return redisClient;
+}
+
+/**
+ * Persists a token-list payload in Redis with a fetch timestamp.
+ *
+ * The stored JSON shape is `{ fetchedAt, tokens }`, which is reused by token-list
+ * API endpoints for cache reads and stale-age checks.
+ */
+export async function persistTokenListToRedis(
+  redis: Redis,
+  cacheKey: string,
+  tokens: TokenWithChainId[],
+  ttlSec: number,
+): Promise<void> {
+  await redis.setex(
+    cacheKey,
+    ttlSec,
+    JSON.stringify({
+      fetchedAt: Date.now(),
+      tokens,
+    }),
+  );
+}
+
+/**
+ * Parses token-list cache payload from Redis.
+ *
+ * Expected JSON shape: `{ fetchedAt: number, tokens: TokenWithChainId[] }`.
+ * Returns `null` when payload is malformed.
+ */
+export function parseTokenListCacheFromRedis(raw: string): {
+  tokens: TokenWithChainId[];
+  fetchedAt: number;
+} | null {
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== "object") return null;
+
+    const payload = parsed as { fetchedAt?: unknown; tokens?: unknown };
+    if (!Array.isArray(payload.tokens)) return null;
+    if (
+      typeof payload.fetchedAt !== "number" ||
+      !Number.isFinite(payload.fetchedAt) ||
+      payload.fetchedAt <= 0
+    ) {
+      return null;
+    }
+
+    const tokens = payload.tokens.filter(
+      (row): row is TokenWithChainId =>
+        !!row &&
+        typeof row === "object" &&
+        typeof (row as { chainId?: unknown }).chainId === "number" &&
+        typeof (row as { address?: unknown }).address === "string" &&
+        typeof (row as { decimals?: unknown }).decimals === "number" &&
+        typeof (row as { name?: unknown }).name === "string" &&
+        typeof (row as { symbol?: unknown }).symbol === "string" &&
+        typeof (row as { logo?: unknown }).logo === "string",
+    );
+    if (tokens.length !== payload.tokens.length) return null;
+
+    return { tokens, fetchedAt: payload.fetchedAt };
+  } catch {
+    return null;
+  }
 }

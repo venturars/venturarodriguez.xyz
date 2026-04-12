@@ -175,7 +175,7 @@
       "description": "Swap tokens with confidence.",
       "form": {
         "legendTokenIn": "You swap",
-        "legendTokenOut": "You receive",
+        "legendTokenOut": "You will receive",
         "swapAriaLabel": "Swap input and output tokens",
         "submit": "Swap",
         "submitting": "Swapping...",

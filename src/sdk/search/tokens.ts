@@ -1,6 +1,6 @@
 import type { Address } from "viem";
 import { retrieveTokenWithDetails } from "../token/retrieveTokenWithDetails";
-import { retrieveUniswapTokens } from "../tokens/retrieveUniswapTokens";
+import { retrieveBlockscoutTokens } from "../tokens/retrieveBlockscoutTokens";
 import type { Network, TokenWithChainId, TokenWithBalance } from "../types";
 import { retrieveTokensWithBalance } from "../user/retrieveTokensWithBalance";
 import { isValidAddress } from "../utils";
@@ -8,7 +8,7 @@ import { SUPPORTED_CHAIN_IDS } from "../constants";
 
 type SearchSelectorEmptyQueryMode = "balances" | "top10";
 
-const UNISWAP_PREVIEW_COUNT = 10;
+const BLOCKSCOUT_PREVIEW_COUNT = 20;
 
 export interface SearchSelectorTokensParams {
   walletAddress: Address;
@@ -18,15 +18,15 @@ export interface SearchSelectorTokensParams {
 }
 
 /**
- * Data for the token selector modal: combines wallet balances, Uniswap default list
+ * Data for the token selector modal: combines wallet balances, Blockscout token list
  * search, and single-token resolution by contract address. Rows are {@link TokenWithChainId} or {@link TokenWithBalance};
  *
- * - Empty query → see {@link SearchSelectorTokensParams.emptyQueryMode}: wallet balances (default) or Uniswap preview slice.
+ * - Empty query → see {@link SearchSelectorTokensParams.emptyQueryMode}: wallet balances (default) or Blockscout preview slice.
  * - Query that is a valid token address (incl. native sentinel) → one row from
  *   {@link retrieveTokenWithDetails} or empty if the API errors.
- * - Otherwise → Uniswap list for `chainId` filtered by query; rows with wallet balance
- *   come first; then wallet tokens that match the query but are not on that Uniswap
- *   slice; then remaining Uniswap matches.
+ * - Otherwise → Blockscout list for `chainId` filtered by query; rows with wallet balance
+ *   come first; then wallet tokens that match the query but are not on that Blockscout
+ *   slice; then remaining Blockscout matches.
  */
 export async function searchSelectorTokens(
   params: SearchSelectorTokensParams,
@@ -41,10 +41,13 @@ export async function searchSelectorTokens(
   if (q === "") {
     if (emptyQueryMode === "top10") {
       try {
-        const list = await retrieveUniswapTokens({ chainId });
-        return list.slice(0, UNISWAP_PREVIEW_COUNT);
+        const list = await retrieveBlockscoutTokens({
+          chainId,
+          itemsCount: BLOCKSCOUT_PREVIEW_COUNT,
+        });
+        return list.slice(0, BLOCKSCOUT_PREVIEW_COUNT);
       } catch {
-        throw new Error("Failed to load Uniswap token list");
+        throw new Error("Failed to load Blockscout token list");
       }
     }
 
@@ -87,30 +90,32 @@ export async function searchSelectorTokens(
   const addrKey = (a: string) => a.toLowerCase();
 
   try {
-    const [balanceTokens, uniswapList] = await Promise.all([
+    const [balanceTokens, blockscoutList] = await Promise.all([
       retrieveTokensWithBalance(walletAddress, { networks: [chainId] }),
-      retrieveUniswapTokens({ chainId }),
+      retrieveBlockscoutTokens({ chainId, q }),
     ]);
 
     const held = new Set(balanceTokens.map((t) => addrKey(t.address)));
-    const uniswapMatching = uniswapList.filter(matchesQuery);
-    const uniswapMatchKeys = new Set(
-      uniswapMatching.map((t) => addrKey(t.address)),
+    const blockscoutMatching = blockscoutList.filter(matchesQuery);
+    const blockscoutMatchKeys = new Set(
+      blockscoutMatching.map((t) => addrKey(t.address)),
     );
 
-    const uniswapHeld = uniswapMatching.filter((t) =>
+    const blockscoutHeld = blockscoutMatching.filter((t) =>
       held.has(addrKey(t.address)),
     );
-    const uniswapNotHeld = uniswapMatching.filter(
+    const blockscoutNotHeld = blockscoutMatching.filter(
       (t) => !held.has(addrKey(t.address)),
     );
 
     const balanceOnlyMatching = balanceTokens.filter(
-      (b) => matchesQuery(b) && !uniswapMatchKeys.has(addrKey(b.address)),
+      (b) => matchesQuery(b) && !blockscoutMatchKeys.has(addrKey(b.address)),
     );
 
-    return [...uniswapHeld, ...balanceOnlyMatching, ...uniswapNotHeld];
+    return [...blockscoutHeld, ...balanceOnlyMatching, ...blockscoutNotHeld];
   } catch {
-    throw new Error("Failed to retrieve tokens with balance or Uniswap list");
+    throw new Error(
+      "Failed to retrieve tokens with balance or Blockscout list",
+    );
   }
 }
