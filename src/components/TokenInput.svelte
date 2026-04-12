@@ -168,9 +168,17 @@
   <label class="input w-full input-neutral input-xl pl-0 border-0 gap-0">
     <button
       type="button"
-      class="btn btn-ghost text-primary-content btn-lg h-full"
+      class="btn btn-ghost text-primary-content btn-lg h-full gap-1 px-2"
       onclick={openTokenModal}
     >
+      {#if token.logo}
+        <img
+          src={token.logo}
+          alt={`${token.symbol} logo`}
+          class="w-5 h-5 rounded-full object-cover"
+          loading="lazy"
+        />
+      {/if}
       {token.symbol}
     </button>
 
