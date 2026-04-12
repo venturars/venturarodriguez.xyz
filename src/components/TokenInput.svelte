@@ -1,4 +1,5 @@
 <script lang="ts">
+  import TokenImage from "./TokenImage.svelte";
   import TokenSelectorModal from "./TokenSelectorModal.svelte";
   import { retrieveTokenWithDetails } from "../sdk/token/retrieveTokenWithDetails";
   import { retrieveTokenWithBalance } from "../sdk/user/retrieveTokenWithBalance";
@@ -171,14 +172,7 @@
       class="btn btn-ghost text-primary-content btn-lg h-full gap-1 px-2"
       onclick={openTokenModal}
     >
-      {#if token.logo}
-        <img
-          src={token.logo}
-          alt={`${token.symbol} logo`}
-          class="w-5 h-5 rounded-full object-cover"
-          loading="lazy"
-        />
-      {/if}
+      <TokenImage src={token.logo} alt="" width={16} height={16} />
       {token.symbol}
     </button>
 
