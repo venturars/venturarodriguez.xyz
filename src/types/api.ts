@@ -84,6 +84,40 @@ export interface UniswapTokenListCachedPayload {
   tokens: TokenWithChainId[];
 }
 
+export interface BlockscoutTokenItem {
+  address_hash: string;
+  bridge_type: "omni" | "amb" | null;
+  circulating_market_cap: string | null;
+  decimals: string | null;
+  exchange_rate: string | null;
+  foreign_address: string | null;
+  holders_count: string | null;
+  icon_url: string | null;
+  name: string | null;
+  origin_chain_id: string | null;
+  reputation: "ok" | "scam" | null;
+  symbol: string | null;
+  total_supply: string | null;
+  type: "ERC-20" | "ERC-721" | "ERC-1155" | "ERC-404" | "ERC-7984" | null;
+  volume_24h: string | null;
+}
+
+export interface BlockscoutTokensNextPageParams {
+  contract_address_hash?: string;
+  fiat_value?: string;
+  holders_count?: number | string;
+  is_name_null?: boolean;
+  market_cap?: string;
+  name?: string;
+  items_count?: number;
+  [key: string]: unknown;
+}
+
+export interface BlockscoutTokensListResponse {
+  items: BlockscoutTokenItem[];
+  next_page_params: BlockscoutTokensNextPageParams | null;
+}
+
 export interface ZeroExFeeEntry {
   amount: string;
   token: string;

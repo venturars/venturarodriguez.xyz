@@ -3,13 +3,16 @@ import type { Address } from "viem";
 import type Redis from "ioredis";
 import { SUPPORTED_CHAIN_IDS } from "../../../sdk/constants";
 import type {
-  UniswapTokenListCachedPayload,
   UniswapTokenListJson,
   UniswapTokenListToken,
 } from "../../../types/api";
 import type { TokenWithChainId } from "../../../sdk/types";
 import { buildLogoUrl } from "../../../sdk/utils";
-import { getRedisClient } from "../../../utils/api";
+import {
+  getRedisClient,
+  parseTokenListCacheFromRedis,
+  persistTokenListToRedis,
+} from "../../../utils/api";
 
 export const prerender = false;
 
@@ -19,6 +22,14 @@ const CACHE_TTL_SEC = 12 * 60 * 60; // 12 hours
 const STALE_BACKGROUND_REFRESH_AFTER_MS = 10 * 60 * 60 * 1000; // 10 hours
 const MAX_STALE_SERVE_MS = CACHE_TTL_SEC * 1000; // align with Redis TTL: beyond this, block until fresh
 
+/**
+ * Parses `address` query parameters into a normalized lowercase set.
+ *
+ * Supports repeated params and comma-separated values:
+ * `?address=0xabc&address=0xdef,0x123`.
+ *
+ * Returns `null` when no valid address filters are present.
+ */
 function parseAddressFilters(
   searchParams: URLSearchParams,
 ): Set<string> | null {
@@ -36,6 +47,7 @@ function parseAddressFilters(
   return new Set(normalized);
 }
 
+/** Maps one Uniswap token-list token into the app `TokenWithChainId` shape. */
 function toTokenWithChainId(t: UniswapTokenListToken): TokenWithChainId {
   return {
     chainId: t.chainId,
@@ -47,40 +59,11 @@ function toTokenWithChainId(t: UniswapTokenListToken): TokenWithChainId {
   };
 }
 
-function normalizeCachedTokenRow(row: unknown): TokenWithChainId | null {
-  if (!row || typeof row !== "object") return null;
-  const o = row as Record<string, unknown>;
-  if (
-    typeof o.chainId !== "number" ||
-    typeof o.address !== "string" ||
-    typeof o.decimals !== "number" ||
-    typeof o.name !== "string" ||
-    typeof o.symbol !== "string"
-  ) {
-    return null;
-  }
-  return {
-    chainId: o.chainId,
-    address: o.address as Address,
-    decimals: o.decimals,
-    name: o.name,
-    symbol: o.symbol,
-    logo: buildLogoUrl(o.address, o.chainId),
-  };
-}
-
-function parseTokenWithChainIdArray(
-  rows: unknown[],
-): TokenWithChainId[] | null {
-  const out: TokenWithChainId[] = [];
-  for (const row of rows) {
-    const t = normalizeCachedTokenRow(row);
-    if (!t) return null;
-    out.push(t);
-  }
-  return out;
-}
-
+/**
+ * Fetches Uniswap's default token list and filters it by supported chains.
+ *
+ * Throws when upstream responds with a non-2xx status.
+ */
 async function fetchSupportedTokensFromUniswap(): Promise<TokenWithChainId[]> {
   const res = await fetch(UNISWAP_TOKEN_LIST_URL);
   if (!res.ok) {
@@ -92,65 +75,32 @@ async function fetchSupportedTokensFromUniswap(): Promise<TokenWithChainId[]> {
     .map(toTokenWithChainId);
 }
 
-function parseRedisCache(raw: string): {
-  tokens: TokenWithChainId[];
-  fetchedAt: number;
-} | null {
-  try {
-    const parsed = JSON.parse(raw) as unknown;
-    if (Array.isArray(parsed)) {
-      const tokens = parseTokenWithChainIdArray(parsed);
-      if (!tokens) return null;
-      return { tokens, fetchedAt: 0 };
-    }
-    if (
-      parsed &&
-      typeof parsed === "object" &&
-      "tokens" in parsed &&
-      "fetchedAt" in parsed
-    ) {
-      const p = parsed as { tokens: unknown; fetchedAt: unknown };
-      if (!Array.isArray(p.tokens) || typeof p.fetchedAt !== "number") {
-        return null;
-      }
-      const tokens = parseTokenWithChainIdArray(p.tokens);
-      if (!tokens) return null;
-      return { tokens, fetchedAt: p.fetchedAt };
-    }
-  } catch {
-    /* ignore */
-  }
-  return null;
-}
-
-async function persistToRedis(
-  redis: Redis,
-  tokens: TokenWithChainId[],
-): Promise<void> {
-  const payload: UniswapTokenListCachedPayload = {
-    fetchedAt: Date.now(),
-    tokens,
-  };
-  await redis.setex(REDIS_KEY, CACHE_TTL_SEC, JSON.stringify(payload));
-}
-
 /** Updates Redis after fetch; errors are logged only (does not reject). */
 async function refreshRedisInBackground(redis: Redis): Promise<void> {
   try {
     const fresh = await fetchSupportedTokensFromUniswap();
-    await persistToRedis(redis, fresh);
+    await persistTokenListToRedis(redis, REDIS_KEY, fresh, CACHE_TTL_SEC);
   } catch (err) {
     console.error("UniswapTokens background refresh:", err);
   }
 }
 
+/**
+ * Loads supported tokens with stale-while-revalidate semantics.
+ *
+ * Behavior:
+ * - cache age <= 10h: return cache
+ * - 10h < cache age < 12h: return stale cache and refresh in background
+ * - cache age >= 12h or unknown age: block for fresh fetch (fallback to stale)
+ * - Redis unavailable or read error: fetch directly from upstream
+ */
 async function loadSupportedTokens(): Promise<TokenWithChainId[]> {
   const redis = getRedisClient();
   if (redis) {
     try {
       const cached = await redis.get(REDIS_KEY);
       if (cached) {
-        const entry = parseRedisCache(cached);
+        const entry = parseTokenListCacheFromRedis(cached);
         if (entry) {
           const { tokens, fetchedAt } = entry;
           const ageMs = Date.now() - fetchedAt;
@@ -159,12 +109,17 @@ async function loadSupportedTokens(): Promise<TokenWithChainId[]> {
             return tokens;
           }
 
-          const mustAwaitFresh = fetchedAt <= 0 || ageMs >= MAX_STALE_SERVE_MS;
+          const mustAwaitFresh = ageMs >= MAX_STALE_SERVE_MS;
 
           if (mustAwaitFresh) {
             try {
               const fresh = await fetchSupportedTokensFromUniswap();
-              await persistToRedis(redis, fresh);
+              await persistTokenListToRedis(
+                redis,
+                REDIS_KEY,
+                fresh,
+                CACHE_TTL_SEC,
+              );
               return fresh;
             } catch (err) {
               console.error("UniswapTokens sync refresh failed:", err);
@@ -180,7 +135,12 @@ async function loadSupportedTokens(): Promise<TokenWithChainId[]> {
 
           try {
             const fresh = await fetchSupportedTokensFromUniswap();
-            await persistToRedis(redis, fresh);
+            await persistTokenListToRedis(
+              redis,
+              REDIS_KEY,
+              fresh,
+              CACHE_TTL_SEC,
+            );
             return fresh;
           } catch (err) {
             console.error(
@@ -199,7 +159,7 @@ async function loadSupportedTokens(): Promise<TokenWithChainId[]> {
   const fresh = await fetchSupportedTokensFromUniswap();
   if (redis) {
     try {
-      await persistToRedis(redis, fresh);
+      await persistTokenListToRedis(redis, REDIS_KEY, fresh, CACHE_TTL_SEC);
     } catch (err) {
       console.error("UniswapTokens Redis write:", err);
     }
