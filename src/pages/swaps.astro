@@ -2,6 +2,7 @@
 import MainLayout from "../layouts/Main.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import PageSkeletonShell from "../components/PageSkeletonShell.astro";
 import SwapForm from "../components/SwapForm.svelte";
 import NetworkSwitcherButton from "../components/NetworkSwitcherButton.svelte";
 import EN from "../locales/EN.json";
@@ -11,15 +12,17 @@ import EN from "../locales/EN.json";
   title={EN.pages.swaps.title}
   description={EN.pages.swaps.description}
 >
-  <Header />
-  <div class="w-full sm:bg-neutral max-sm:bg-primary">
-    <div class="pt-4 px-4 md:px-8">
-      <NetworkSwitcherButton client:only="svelte" />
-    </div>
+  <PageSkeletonShell mainSelector="#swaps-main">
+    <Header />
+    <div id="swaps-main" class="w-full sm:bg-neutral max-sm:bg-primary">
+      <div class="pt-4 px-4 md:px-8">
+        <NetworkSwitcherButton client:only="svelte" />
+      </div>
 
-    <div class="w-full sm:pb-24 pt-6">
-      <SwapForm client:only="svelte" />
+      <div class="w-full sm:pb-24 pt-6">
+        <SwapForm client:only="svelte" />
+      </div>
     </div>
-  </div>
-  <Footer />
+    <Footer />
+  </PageSkeletonShell>
 </MainLayout>

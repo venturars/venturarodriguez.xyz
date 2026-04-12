@@ -2,6 +2,7 @@
 import MainLayout from "../layouts/Main.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import PageSkeletonShell from "../components/PageSkeletonShell.astro";
 import EN from "../locales/EN.json";
 ---
 
@@ -9,22 +10,7 @@ import EN from "../locales/EN.json";
   title={EN.pages.landing.title}
   description={EN.pages.landing.description}
 >
-  <div
-    id="landing-skeleton-overlay"
-    class="fixed inset-0 z-100 flex items-center justify-center bg-primary transition-opacity duration-1400 ease-out"
-    aria-hidden="true"
-  >
-    <span
-      class="select-none font-playfair text-[clamp(8rem,44vw,24rem)] leading-none tracking-tight text-primary-content/25"
-    >
-      VR
-    </span>
-  </div>
-
-  <div
-    id="landing-shell"
-    class="opacity-0 transition-opacity duration-1400 ease-out"
-  >
+  <PageSkeletonShell mainSelector="#landing-main">
     <Header />
     <div
       id="landing-main"
@@ -46,63 +32,5 @@ import EN from "../locales/EN.json";
       </div>
     </div>
     <Footer />
-  </div>
-
-  <noscript>
-    <style>
-      #landing-skeleton-overlay {
-        display: none !important;
-      }
-      #landing-shell {
-        opacity: 1 !important;
-      }
-    </style>
-  </noscript>
-
-  <script>
-    const landingMain = document.getElementById("landing-main");
-    const landingShell = document.getElementById("landing-shell");
-    const landingSkeleton = document.getElementById("landing-skeleton-overlay");
-    const header = document.querySelector("header");
-    const footer = document.querySelector("footer");
-    let isLandingReady = false;
-    const LANDING_FADE_MS = 1400;
-
-    function getViewportHeight() {
-      return window.visualViewport?.height ?? window.innerHeight;
-    }
-
-    function revealLandingContent() {
-      if (isLandingReady) return;
-      isLandingReady = true;
-      landingShell?.classList.remove("opacity-0");
-      landingShell?.classList.add("opacity-100");
-      landingSkeleton?.classList.add("pointer-events-none", "opacity-0");
-      window.setTimeout(() => {
-        landingSkeleton?.classList.add("hidden");
-      }, LANDING_FADE_MS);
-    }
-
-    function syncLandingHeight() {
-      if (!landingMain || !header || !footer) return;
-      const headerHeight = Math.ceil(header.getBoundingClientRect().height);
-      const footerHeight = Math.ceil(footer.getBoundingClientRect().height);
-      const availableHeight = Math.max(
-        0,
-        Math.floor(getViewportHeight() - headerHeight - footerHeight),
-      );
-
-      landingMain.style.minHeight = `${availableHeight}px`;
-      if (!isLandingReady) revealLandingContent();
-    }
-
-    syncLandingHeight();
-    window.addEventListener("resize", syncLandingHeight);
-    window.addEventListener("orientationchange", syncLandingHeight);
-    window.visualViewport?.addEventListener("resize", syncLandingHeight);
-
-    const resizeObserver = new ResizeObserver(syncLandingHeight);
-    if (header) resizeObserver.observe(header);
-    if (footer) resizeObserver.observe(footer);
-  </script>
+  </PageSkeletonShell>
 </MainLayout>

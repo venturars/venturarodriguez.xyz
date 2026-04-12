@@ -1,0 +1,119 @@
+---
+const {
+  mainSelector = "",
+  overlayClassName = "bg-primary",
+  shellClassName = "",
+  overlayLabel = "VR",
+  fadeMs = 800,
+} = Astro.props;
+
+const transitionDurationStyle = `transition-duration: ${fadeMs}ms;`;
+
+const normalizedShellClassName = shellClassName
+  ? `${shellClassName} translate-y-1 opacity-0 transition-all ease-out`
+  : "translate-y-1 opacity-0 transition-all ease-out";
+---
+
+<div
+  data-page-skeleton-overlay
+  class={`fixed inset-0 z-100 flex scale-100 items-center justify-center opacity-100 transition-all ease-out ${overlayClassName}`}
+  style={transitionDurationStyle}
+  aria-hidden="true"
+>
+  <span
+    class="select-none font-playfair text-[clamp(8rem,44vw,24rem)] leading-none tracking-tight text-primary-content/25"
+  >
+    {overlayLabel}
+  </span>
+</div>
+
+<div
+  data-page-skeleton-shell
+  class={normalizedShellClassName}
+  style={transitionDurationStyle}
+>
+  <slot />
+</div>
+
+<noscript>
+  <style>
+    [data-page-skeleton-overlay] {
+      display: none !important;
+    }
+    [data-page-skeleton-shell] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  </style>
+</noscript>
+
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    [data-page-skeleton-overlay],
+    [data-page-skeleton-shell] {
+      transition-duration: 0ms !important;
+      transition-delay: 0ms !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<script define:vars={{ mainSelector, fadeMs }}>
+  const pageMain = mainSelector ? document.querySelector(mainSelector) : null;
+  const pageShell = document.querySelector("[data-page-skeleton-shell]");
+  const pageSkeleton = document.querySelector("[data-page-skeleton-overlay]");
+  const header = document.querySelector("header");
+  const footer = document.querySelector("footer");
+  let isPageReady = false;
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const effectiveFadeMs = reducedMotion ? 0 : fadeMs;
+
+  function getViewportHeight() {
+    return window.visualViewport?.height ?? window.innerHeight;
+  }
+
+  function revealPageContent() {
+    if (isPageReady) return;
+    isPageReady = true;
+    pageShell?.classList.remove("opacity-0", "translate-y-1");
+    pageShell?.classList.add("opacity-100", "translate-y-0");
+    pageSkeleton?.classList.add(
+      "pointer-events-none",
+      "opacity-0",
+      "scale-[1.02]",
+    );
+    window.setTimeout(() => {
+      pageSkeleton?.classList.add("hidden");
+    }, effectiveFadeMs);
+  }
+
+  function syncPageHeight() {
+    if (!pageMain || !header || !footer) {
+      revealPageContent();
+      return;
+    }
+
+    const headerHeight = Math.ceil(header.getBoundingClientRect().height);
+    const footerHeight = Math.ceil(footer.getBoundingClientRect().height);
+    const availableHeight = Math.max(
+      0,
+      Math.floor(getViewportHeight() - headerHeight - footerHeight),
+    );
+
+    pageMain.style.minHeight = `${availableHeight}px`;
+    if (!isPageReady) revealPageContent();
+  }
+
+  syncPageHeight();
+  window.addEventListener("resize", syncPageHeight);
+  window.addEventListener("orientationchange", syncPageHeight);
+  window.visualViewport?.addEventListener("resize", syncPageHeight);
+
+  if (typeof ResizeObserver !== "undefined") {
+    const resizeObserver = new ResizeObserver(syncPageHeight);
+    if (header) resizeObserver.observe(header);
+    if (footer) resizeObserver.observe(footer);
+  }
+</script>
