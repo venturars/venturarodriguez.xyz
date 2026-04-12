@@ -9,19 +9,100 @@ import EN from "../locales/EN.json";
   title={EN.pages.landing.title}
   description={EN.pages.landing.description}
 >
-  <Header />
   <div
-    class="md:h-[calc(100vh-3.5rem-3.5rem)] h-[calc(100vh-152px-3rem)] min-h-max w-screen bg-primary text-base-200"
+    id="landing-skeleton-overlay"
+    class="fixed inset-0 z-100 flex items-center justify-center bg-primary transition-opacity duration-1400 ease-out"
+    aria-hidden="true"
   >
-    <div class="flex items-center justify-center h-full gap-4">
-      {
-        EN.pages.landing.tools.map((tool) => (
-          <a href="/swaps" class="btn btn-ghost btn-xl outline outline-neutral">
-            {tool}
-          </a>
-        ))
-      }
-    </div>
+    <span
+      class="select-none font-playfair text-[clamp(8rem,44vw,24rem)] leading-none tracking-tight text-primary-content/25"
+    >
+      VR
+    </span>
   </div>
-  <Footer />
+
+  <div
+    id="landing-shell"
+    class="opacity-0 transition-opacity duration-1400 ease-out"
+  >
+    <Header />
+    <div
+      id="landing-main"
+      class="relative flex w-full items-center justify-center overflow-hidden bg-primary text-base-200"
+    >
+      <div
+        class="relative z-10 flex w-full flex-wrap items-center justify-center gap-4 px-4 py-6"
+      >
+        {
+          EN.pages.landing.tools.map((tool) => (
+            <a
+              href="/swaps"
+              class="btn btn-ghost sm:btn-xl btn-lg outline outline-neutral"
+            >
+              {tool}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+    <Footer />
+  </div>
+
+  <noscript>
+    <style>
+      #landing-skeleton-overlay {
+        display: none !important;
+      }
+      #landing-shell {
+        opacity: 1 !important;
+      }
+    </style>
+  </noscript>
+
+  <script>
+    const landingMain = document.getElementById("landing-main");
+    const landingShell = document.getElementById("landing-shell");
+    const landingSkeleton = document.getElementById("landing-skeleton-overlay");
+    const header = document.querySelector("header");
+    const footer = document.querySelector("footer");
+    let isLandingReady = false;
+    const LANDING_FADE_MS = 1400;
+
+    function getViewportHeight() {
+      return window.visualViewport?.height ?? window.innerHeight;
+    }
+
+    function revealLandingContent() {
+      if (isLandingReady) return;
+      isLandingReady = true;
+      landingShell?.classList.remove("opacity-0");
+      landingShell?.classList.add("opacity-100");
+      landingSkeleton?.classList.add("pointer-events-none", "opacity-0");
+      window.setTimeout(() => {
+        landingSkeleton?.classList.add("hidden");
+      }, LANDING_FADE_MS);
+    }
+
+    function syncLandingHeight() {
+      if (!landingMain || !header || !footer) return;
+      const headerHeight = Math.ceil(header.getBoundingClientRect().height);
+      const footerHeight = Math.ceil(footer.getBoundingClientRect().height);
+      const availableHeight = Math.max(
+        0,
+        Math.floor(getViewportHeight() - headerHeight - footerHeight),
+      );
+
+      landingMain.style.minHeight = `${availableHeight}px`;
+      if (!isLandingReady) revealLandingContent();
+    }
+
+    syncLandingHeight();
+    window.addEventListener("resize", syncLandingHeight);
+    window.addEventListener("orientationchange", syncLandingHeight);
+    window.visualViewport?.addEventListener("resize", syncLandingHeight);
+
+    const resizeObserver = new ResizeObserver(syncLandingHeight);
+    if (header) resizeObserver.observe(header);
+    if (footer) resizeObserver.observe(footer);
+  </script>
 </MainLayout>

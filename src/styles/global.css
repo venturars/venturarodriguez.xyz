@@ -5,7 +5,7 @@
 [data-theme="venturarodriguezxyz"] {
   html,
   body {
-    @apply bg-base-200 font-lato text-base-content;
+    @apply w-full max-w-full bg-base-200 font-lato text-base-content;
   }
 
   h1,
@@ -61,7 +61,7 @@
   }
 
   .prose {
-    @apply text-base-content;
+    @apply text-base-content wrap-break-word;
   }
 
   .prose h1,
@@ -75,5 +75,31 @@
 
   .prose a {
     @apply text-accent underline decoration-accent underline-offset-2;
+  }
+
+  .tooltip-mobile-safe::before {
+    max-width: min(85vw, 22rem);
+    white-space: normal;
+    text-align: left;
+  }
+
+  @media (max-width: 40rem) {
+    .tooltip-mobile-safe,
+    .tooltip-mobile-safe::before,
+    .tooltip-mobile-safe::after {
+      overflow: visible;
+    }
+
+    .tooltip-mobile-safe::before {
+      left: 0;
+      right: auto;
+      transform: translateX(0);
+    }
+
+    .tooltip-mobile-safe::after {
+      left: 0.9rem;
+      right: auto;
+      transform: translateX(0);
+    }
   }
 }

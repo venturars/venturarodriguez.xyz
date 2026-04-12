@@ -86,7 +86,7 @@
   onclose={handleClose}
 >
   <div
-    class="modal-box bg-base-100 max-w-2xl w-full rounded-lg border border-warning/30"
+    class="modal-box bg-base-100 max-h-[90dvh] w-full max-w-2xl overflow-y-auto rounded-lg border border-warning p-4 sm:p-6"
     role="alertdialog"
     aria-modal="true"
     aria-labelledby="risk-modal-title"

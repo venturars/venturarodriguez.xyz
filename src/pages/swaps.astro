@@ -12,14 +12,12 @@ import EN from "../locales/EN.json";
   description={EN.pages.swaps.description}
 >
   <Header />
-  <div
-    class="md:min-h-[calc(100vh-3.5rem-3.5rem)] min-h-[calc(100vh-152px-3rem)] w-screen bg-neutral"
-  >
-    <div class="pt-4 pl-8">
+  <div class="w-full sm:bg-neutral max-sm:bg-primary">
+    <div class="pt-4 px-4 md:px-8">
       <NetworkSwitcherButton client:only="svelte" />
     </div>
 
-    <div class="w-full pb-24 pt-6">
+    <div class="w-full sm:pb-24 pt-6">
       <SwapForm client:only="svelte" />
     </div>
   </div>

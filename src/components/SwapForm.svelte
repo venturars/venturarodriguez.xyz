@@ -2,7 +2,7 @@
   import SwapVerticalIcon from "./icons/SwapVerticalIcon.svelte";
   import TokenInput from "./TokenInput.svelte";
   import SlippageInput from "./SlippageInput.svelte";
-  import PlatformFeeInput from "./PlatformFeeInput.svelte";
+  import PlatformDonationInput from "./PlatformDonationInput.svelte";
   import RecipientAddressInput from "./RecipientAddressInput.svelte";
   import SwapDetails from "./SwapDetails.svelte";
   import SubmitTransaction from "./SubmitTransaction.svelte";
@@ -385,7 +385,7 @@
   });
 </script>
 
-<div class="mx-auto w-lg bg-primary p-8">
+<div class="mx-auto w-full max-w-lg bg-primary p-4 sm:p-6 md:p-8 max-xs:p-4">
   <form class="flex flex-col text-base-200" onsubmit={handleSubmit}>
     <TokenInput
       legend={locales.legendTokenIn}
@@ -423,7 +423,7 @@
     />
 
     <SlippageInput bind:slippage className="mt-2" />
-    <PlatformFeeInput bind:platformFeePercent className="mt-2" />
+    <PlatformDonationInput bind:platformFeePercent className="mt-2" />
 
     <div class="divider"></div>
 

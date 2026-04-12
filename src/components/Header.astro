@@ -1,12 +1,68 @@
 ---
 import AppKitButton from "./AppKitButton.astro";
+import HamburgerIcon from "./icons/HamburgerIcon.astro";
 import EN from "../locales/EN.json";
 ---
 
 <header
-  class="md:h-14 h-12 flex px-8 max-md:px-4 bg-primary text-primary-content"
+  class="md:h-14 min-h-12 flex items-center justify-between gap-2 bg-primary px-3 py-2 text-primary-content md:px-8"
 >
-  <ul class="flex items-center space-x-4 h-full w-full">
+  <div class="drawer drawer-start w-auto md:hidden">
+    <input id="mobile-menu-drawer" type="checkbox" class="drawer-toggle" />
+    <div class="drawer-content">
+      <label
+        for="mobile-menu-drawer"
+        aria-label="Open navigation menu"
+        role="button"
+        tabindex="0"
+        data-drawer-trigger
+        class="btn btn-ghost btn-square btn-base border-none bg-transparent"
+      >
+        <HamburgerIcon class="h-5 w-5" />
+      </label>
+    </div>
+    <div class="drawer-side z-50">
+      <label
+        for="mobile-menu-drawer"
+        aria-label="Close navigation menu"
+        class="drawer-overlay"></label>
+      <aside
+        class="min-h-full w-72 max-w-[90vw] border-r border-primary-content/20 bg-primary p-4 text-primary-content"
+        aria-label="Mobile navigation"
+      >
+        <div class="mb-4 flex items-center justify-between">
+          <span class="font-playfair">Menu</span>
+          <label
+            for="mobile-menu-drawer"
+            class="btn btn-ghost btn-sm btn-square bg-transparent border-none"
+            aria-label="Close navigation menu"
+            role="button"
+            tabindex="0"
+            data-drawer-trigger
+          >
+            ✕
+          </label>
+        </div>
+        <ul class="menu w-full gap-1">
+          {
+            EN.header.links.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <ul class="hidden h-full w-full items-center gap-x-3 gap-y-1 md:flex">
     {
       EN.header.links.map((item, index) => (
         <>
@@ -25,5 +81,22 @@ import EN from "../locales/EN.json";
       ))
     }
   </ul>
-  <AppKitButton />
+  <div class="ml-auto shrink-0 grid place-content-center">
+    <AppKitButton />
+  </div>
 </header>
+
+<script>
+  const drawerTriggers = document.querySelectorAll<HTMLElement>(
+    "[data-drawer-trigger]",
+  );
+
+  drawerTriggers.forEach((trigger) => {
+    trigger.addEventListener("keydown", (event: KeyboardEvent) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        trigger.click();
+      }
+    });
+  });
+</script>

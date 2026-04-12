@@ -3,4 +3,5 @@
 @theme "venturarodriguezxyz" {
   --font-playfair: "Playfair Display", serif;
   --font-lato: "Lato", sans-serif;
+  --breakpoint-xs: 20rem;
 }

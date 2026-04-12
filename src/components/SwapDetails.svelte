@@ -125,23 +125,23 @@
       ></span>
     </div>
   {:else}
-    <div class="flex justify-between items-center">
+    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
       <span>{locales.rateLabel}</span>
-      <span>
+      <span class="text-right wrap-break-word max-xs:text-left">
         1 {tokenInSymbol} =
         {details.rate !== null
           ? ` ${formatRate(details.rate)} ${tokenOutSymbol}`
           : ` ${locales.rateFallback}`}
       </span>
     </div>
-    <div class="flex justify-between items-center">
+    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
       <span
-        class="tooltip tooltip-right cursor-help"
+        class="tooltip tooltip-right cursor-help max-xs:tooltip-bottom"
         data-tip={locales.minimumReceived.tooltip}
       >
         {locales.minimumReceived.label}
       </span>
-      <span>
+      <span class="text-right wrap-break-word max-xs:text-left">
         {details.minReceivedToken}
         {#if details.minReceivedToken !== "-"}
           {` ${tokenOutSymbol}`}
@@ -149,34 +149,38 @@
         {` (${details.minReceivedUsd})`}
       </span>
     </div>
-    <div class="flex justify-between items-center">
+    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
       <span
-        class="tooltip tooltip-right cursor-help underline"
+        class="tooltip tooltip-right cursor-help underline max-xs:tooltip-bottom"
         data-tip={locales.swapPriceImpact.tooltip}
       >
         {locales.swapPriceImpact.label}
       </span>
-      <span
+      <span class="text-right wrap-break-word max-xs:text-left"
         >{details.swapPriceImpactPercent} ({details.swapPriceImpactUsd})</span
       >
     </div>
-    <div class="flex justify-between items-center">
+    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
       <span
-        class="tooltip tooltip-right cursor-help underline"
+        class="tooltip tooltip-right cursor-help underline max-xs:tooltip-bottom"
         data-tip={locales.feePriceImpact.tooltip}
       >
         {locales.feePriceImpact.label}
       </span>
-      <span>{details.feePriceImpactPercent} ({details.feePriceImpactUsd})</span>
+      <span class="text-right wrap-break-word max-xs:text-left"
+        >{details.feePriceImpactPercent} ({details.feePriceImpactUsd})</span
+      >
     </div>
-    <div class="flex justify-between items-center">
+    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
       <span
-        class="tooltip tooltip-right cursor-help underline"
+        class="tooltip tooltip-right cursor-help underline max-xs:tooltip-bottom"
         data-tip={locales.priceImpact.tooltip}
       >
         {locales.priceImpact.label}
       </span>
-      <span>{details.priceImpactPercent} ({details.priceImpactUsd})</span>
+      <span class="text-right wrap-break-word max-xs:text-left"
+        >{details.priceImpactPercent} ({details.priceImpactUsd})</span
+      >
     </div>
     {#if details.hasUnavailableData}
       <StatusMessage

@@ -125,7 +125,7 @@
     </button>
   </form>
   <div
-    class="modal-box bg-base-100 max-w-md w-full max-h-[80vh] flex flex-col gap-4 rounded-lg"
+    class="modal-box bg-base-100 max-h-[80vh] w-full max-w-md flex flex-col gap-4 rounded-lg max-xs:max-w-[calc(100vw-0.75rem)] max-xs:gap-3 max-xs:p-3"
   >
     <div class="flex items-center justify-between">
       <h3 class="font-playfair text-lg font-semibold text-base-content">
@@ -146,7 +146,7 @@
       placeholder={locales.searchPlaceholder}
       bind:value={searchQuery}
       disabled={!$walletAddress || $walletChainId === undefined}
-      class="input input-neutral w-full border-base-300 input-md min-h-9 disabled:opacity-50"
+      class="input input-neutral w-full border-base-300 input-md min-h-9 disabled:opacity-50 max-xs:text-sm"
     />
 
     <div class="overflow-y-auto flex-1 min-h-0 divide-y divide-base-300">
@@ -172,7 +172,7 @@
         {#each rows as token (token.chainId + ":" + token.address + ":" + token.symbol + ":list")}
           <button
             type="button"
-            class="w-full flex items-center gap-3 py-3 px-2 hover:bg-base-200 transition-colors text-left"
+            class="w-full min-w-0 flex items-center gap-3 py-3 px-2 hover:bg-base-200 transition-colors text-left"
             onclick={() => handleSelect(token)}
           >
             <TokenImage src={token.logo} alt="" width={32} height={32} />
@@ -182,7 +182,9 @@
               </div>
               <div class="text-sm text-base-content/70">{token.symbol}</div>
             </div>
-            <div class="text-sm text-base-content/80 tabular-nums">
+            <div
+              class="min-w-0 max-w-[45%] shrink-0 break-all text-right text-xs text-base-content/80 tabular-nums sm:text-sm"
+            >
               {(token as TokenWithBalance)?.balance
                 ? formatTokenBalance(
                     (token as TokenWithBalance).balance.toString(),

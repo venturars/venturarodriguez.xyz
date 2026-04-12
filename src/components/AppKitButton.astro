@@ -33,8 +33,7 @@ const locales = EN.components.appKitButton;
   }
 
   const connectBtn = document.getElementById("connect-wallet-btn");
-  const connectBtnIcon =
-    document.getElementById("connect-wallet-btn-icon");
+  const connectBtnIcon = document.getElementById("connect-wallet-btn-icon");
   const connectBtnText = document.getElementById("connect-wallet-btn-text");
 
   connectBtn?.addEventListener("click", () => appKitModal.open());
@@ -52,7 +51,7 @@ const locales = EN.components.appKitButton;
 
 <button
   id="connect-wallet-btn"
-  class="link link-primary no-underline min-w-max inline-flex items-center gap-2"
+  class="link link-primary inline-flex max-w-full items-center gap-1.5 whitespace-normal wrap-break-word text-right text-sm leading-tight no-underline md:text-base"
   data-connect-wallet-text={locales.connectWallet}
 >
   <span id="connect-wallet-btn-icon" style="display: none">
