@@ -125,23 +125,27 @@
       ></span>
     </div>
   {:else}
-    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
+    <div class="flex min-w-0 items-start justify-between gap-2 max-xs:flex-col">
       <span>{locales.rateLabel}</span>
-      <span class="text-right wrap-break-word max-xs:text-left">
+      <span
+        class="min-w-0 text-right wrap-break-word max-xs:max-w-full max-xs:text-left"
+      >
         1 {tokenInSymbol} =
         {details.rate !== null
           ? ` ${formatRate(details.rate)} ${tokenOutSymbol}`
           : ` ${locales.rateFallback}`}
       </span>
     </div>
-    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
+    <div class="flex min-w-0 items-start justify-between gap-2 max-xs:flex-col">
       <span
-        class="tooltip tooltip-right cursor-help max-xs:tooltip-bottom"
+        class="tooltip tooltip-mobile-safe tooltip-right cursor-help max-xs:tooltip-bottom"
         data-tip={locales.minimumReceived.tooltip}
       >
         {locales.minimumReceived.label}
       </span>
-      <span class="text-right wrap-break-word max-xs:text-left">
+      <span
+        class="min-w-0 text-right wrap-break-word max-xs:max-w-full max-xs:text-left"
+      >
         {details.minReceivedToken}
         {#if details.minReceivedToken !== "-"}
           {` ${tokenOutSymbol}`}
@@ -149,36 +153,39 @@
         {` (${details.minReceivedUsd})`}
       </span>
     </div>
-    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
+    <div class="flex min-w-0 items-start justify-between gap-2 max-xs:flex-col">
       <span
-        class="tooltip tooltip-right cursor-help underline max-xs:tooltip-bottom"
+        class="tooltip tooltip-mobile-safe tooltip-right cursor-help underline max-xs:tooltip-bottom"
         data-tip={locales.swapPriceImpact.tooltip}
       >
         {locales.swapPriceImpact.label}
       </span>
-      <span class="text-right wrap-break-word max-xs:text-left"
+      <span
+        class="min-w-0 text-right wrap-break-word max-xs:max-w-full max-xs:text-left"
         >{details.swapPriceImpactPercent} ({details.swapPriceImpactUsd})</span
       >
     </div>
-    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
+    <div class="flex min-w-0 items-start justify-between gap-2 max-xs:flex-col">
       <span
-        class="tooltip tooltip-right cursor-help underline max-xs:tooltip-bottom"
+        class="tooltip tooltip-mobile-safe tooltip-right cursor-help underline max-xs:tooltip-bottom"
         data-tip={locales.feePriceImpact.tooltip}
       >
         {locales.feePriceImpact.label}
       </span>
-      <span class="text-right wrap-break-word max-xs:text-left"
+      <span
+        class="min-w-0 text-right wrap-break-word max-xs:max-w-full max-xs:text-left"
         >{details.feePriceImpactPercent} ({details.feePriceImpactUsd})</span
       >
     </div>
-    <div class="flex items-start justify-between gap-2 max-xs:flex-col">
+    <div class="flex min-w-0 items-start justify-between gap-2 max-xs:flex-col">
       <span
-        class="tooltip tooltip-right cursor-help underline max-xs:tooltip-bottom"
+        class="tooltip tooltip-mobile-safe tooltip-right cursor-help underline max-xs:tooltip-bottom"
         data-tip={locales.priceImpact.tooltip}
       >
         {locales.priceImpact.label}
       </span>
-      <span class="text-right wrap-break-word max-xs:text-left"
+      <span
+        class="min-w-0 text-right wrap-break-word max-xs:max-w-full max-xs:text-left"
         >{details.priceImpactPercent} ({details.priceImpactUsd})</span
       >
     </div>
