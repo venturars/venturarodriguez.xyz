@@ -16,7 +16,7 @@
     "@reown/appkit": "1.8.19",
     "@reown/appkit-adapter-wagmi": "1.8.19",
     "@tailwindcss/vite": "4.2.1",
-    "@wagmi/core": "3.4.0",
+    "@wagmi/core": "3.4.2",
     "astro": "6.0.4",
     "daisyui": "5.5.19",
     "ioredis": "5.10.1",
