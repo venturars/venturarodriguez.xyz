@@ -22,6 +22,7 @@
     "ioredis": "5.10.1",
     "svelte": "5.53.12",
     "tailwindcss": "4.2.1",
+    "cooperative": "github:venturars/cooperative#v0.5.1",
     "viem": "2.47.6",
     "wagmi": "3.5.0"
   },
