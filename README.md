@@ -11,9 +11,5 @@ but I'm actively working on posting engaging content very soon. Stay tuned for u
 | PREVIEW    | https://venturarodriguez.vercel.app | staging | Preview    |
 | LOCALHOST  | http://localhost:3000               | NA      | NA         |
 
-<!-- Mejorar la visualización del order route -->
-<!-- Meter sistema de caché en el sdk -->
-<!-- mejorar la doc -->
-<!-- separar el sdk -->
 <!-- Meter una sección de dar feedback -->
 <!-- mejor manejo de errores -->

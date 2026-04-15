@@ -1,8 +1,8 @@
 <script lang="ts">
   import { switchChain } from "@wagmi/core";
   import TokenImage from "./TokenImage.svelte";
-  import { SUPPORTED_NETWORKS } from "../sdk/constants";
-  import { wagmiConfig } from "../libs/appkit";
+  import { SUPPORTED_NETWORKS } from "cooperative";
+  import { wagmiConfig } from "../libs/web3";
   import { walletAddress, walletChainId } from "../stores/user";
   import EN from "../locales/EN.json";
   import { interpolateTemplate } from "../utils/interface";

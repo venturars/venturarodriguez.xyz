@@ -1,7 +1,6 @@
 import type { APIRoute } from "astro";
 import type { Address } from "viem";
-import type { TokenWithChainId } from "../../../sdk/types";
-import { buildLogoUrl } from "../../../sdk/utils";
+import { buildLogoUrl, type TokenWithChainId } from "cooperative";
 import {
   getRedisClient,
   parseTokenListCacheFromRedis,

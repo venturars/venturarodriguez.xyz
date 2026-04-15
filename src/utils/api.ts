@@ -4,11 +4,13 @@ import {
   ALCHEMY_NETWORKS,
   SUPPORTED_CHAIN_IDS,
   SUPPORTED_NETWORKS,
-} from "../sdk/constants";
-import { isValidAddress } from "../sdk/utils";
-import { amountToUsdScaled } from "../sdk/utils";
-import type { Network, SwapFee, TokenWithChainId } from "../sdk/types";
-import { retrieveTokenWithDetails } from "../sdk/token/retrieveTokenWithDetails";
+  amountToUsdScaled,
+  isValidAddress,
+  retrieveTokenWithDetails,
+  type Network,
+  type SwapFee,
+  type TokenWithChainId,
+} from "cooperative";
 import type { ResolveTokenDetails, ZeroExFeeEntry } from "../types/api";
 
 export function getAlchemyUrl(network: Network["chainId"]): string {
@@ -98,7 +100,8 @@ export function parsePositiveBigInt(raw: string | null, name: string): bigint {
  * Repeated calls for the same `chainId + address` share the same in-flight promise.
  */
 export function createTokenDetailsResolver(
-  tokenDetailsResolver: ResolveTokenDetails = retrieveTokenWithDetails,
+  tokenDetailsResolver: ResolveTokenDetails = (chainId, address) =>
+    retrieveTokenWithDetails(chainId, address),
 ): ResolveTokenDetails {
   const cache = new Map<string, ReturnType<ResolveTokenDetails>>();
   return (chainId, address) => {
