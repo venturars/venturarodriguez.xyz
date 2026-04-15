@@ -1,6 +1,6 @@
 <script lang="ts">
   import { transactionToastStore } from "../stores/transactions";
-  import { getNetwork } from "../sdk/utils";
+  import { getNetwork } from "cooperative";
   import EN from "../locales/EN.json";
   import { interpolateTemplate } from "../utils/interface";
 

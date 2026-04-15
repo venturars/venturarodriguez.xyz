@@ -1,7 +1,7 @@
 <script lang="ts">
   import NetworkSwitcherModal from "./NetworkSwitcherModal.svelte";
   import TokenImage from "./TokenImage.svelte";
-  import { SUPPORTED_NETWORKS } from "../sdk/constants";
+  import { SUPPORTED_NETWORKS } from "cooperative";
   import { walletAddress, walletChainId } from "../stores/user";
   import EN from "../locales/EN.json";
   import { interpolateTemplate } from "../utils/interface";

@@ -1,11 +1,14 @@
 <script lang="ts">
   import TokenImage from "./TokenImage.svelte";
   import TokenSelectorModal from "./TokenSelectorModal.svelte";
-  import { retrieveTokenWithDetails } from "../sdk/token/retrieveTokenWithDetails";
-  import { retrieveTokenWithBalance } from "../sdk/user/retrieveTokenWithBalance";
+  import {
+    retrieveTokenWithBalance,
+    retrieveTokenWithDetails,
+    type TokenWithBalance,
+    type TokenWithChainId,
+  } from "cooperative";
   import { walletAddress, walletDataEpoch } from "../stores/user";
   import { formatFiat, normalizeAmount } from "../utils/interface";
-  import type { TokenWithBalance, TokenWithChainId } from "../sdk/types";
   import { formatUnits } from "viem";
   import EN from "../locales/EN.json";
 
@@ -24,7 +27,7 @@
    * @property {string} [legend] - Optional fieldset legend.
    * @property {string} [value] - Token amount string (bindable).
    * @property {string} [placeholder="0.00"] - Placeholder for amount input.
-   * @property {"balances"|"top10"} [emptyQueryMode="top10"] - Empty-search behavior in selector modal.
+   * @property {"balances"|"top20"} [emptyQueryMode="top20"] - Empty-search behavior in selector modal.
    * @property {boolean} [previewOnly=false] - When true, amount input is read-only and not editable.
    * @property {boolean} [showAmountPresetButtons=false] - Renders MAX/50%/25% amount preset buttons.
    */
@@ -33,7 +36,7 @@
     legend,
     value = $bindable(""),
     placeholder = "0.00",
-    emptyQueryMode = "top10",
+    emptyQueryMode = "top20",
     previewOnly = false,
     showAmountPresetButtons = false,
   }: {
@@ -41,7 +44,7 @@
     legend?: string;
     value?: string;
     placeholder?: string;
-    emptyQueryMode?: "balances" | "top10";
+    emptyQueryMode?: "balances" | "top20";
     previewOnly?: boolean;
     showAmountPresetButtons?: boolean;
   } = $props();

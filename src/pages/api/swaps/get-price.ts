@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import type { Address } from "viem";
 import { formatUnits, getAddress } from "viem";
-import type { SwapFee, SwapPrice } from "../../../sdk/types";
+import type { SwapFee, SwapPrice } from "cooperative";
 import type {
   ResolveTokenDetails,
   ZeroExPriceResponse,
@@ -11,7 +11,7 @@ import {
   calculateBpsFromDelta,
   isValidAddress,
   stringifyWithBigInt,
-} from "../../../sdk/utils";
+} from "cooperative";
 import {
   createTokenDetailsResolver,
   getSwapFee,

@@ -7,11 +7,9 @@ const locales = EN.components.appKitButton;
 
 <script>
   import { getConnection, watchConnection } from "@wagmi/core";
-  import {
-    appKitModal,
-    setupWalletStoreSync,
-    wagmiConfig,
-  } from "../libs/appkit";
+  import { appKitModal } from "../libs/appkitModal";
+  import { setupWalletStoreSync } from "../libs/walletSync";
+  import { wagmiConfig } from "../libs/web3";
 
   /**
    * Reflects wallet connection state in button icon + label.

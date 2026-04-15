@@ -1,6 +1,9 @@
-import { NATIVE_TOKEN_ADDRESS } from "../sdk/constants";
-import type { TokenWithChainId } from "../sdk/types";
-import { buildLogoUrl, getNetwork } from "../sdk/utils";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  buildLogoUrl,
+  getNetwork,
+  type TokenWithChainId,
+} from "cooperative";
 import { formatUnits, parseUnits } from "viem";
 import EN from "../locales/EN.json";
 

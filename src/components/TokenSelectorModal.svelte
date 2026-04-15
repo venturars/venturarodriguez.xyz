@@ -1,9 +1,12 @@
 <script lang="ts">
   import TokenImage from "./TokenImage.svelte";
-  import { searchSelectorTokens } from "../sdk/search/tokens";
-  import { formatTokenBalance } from "../sdk/utils";
+  import {
+    formatTokenBalance,
+    searchSelectorTokens,
+    type TokenWithBalance,
+    type TokenWithChainId,
+  } from "cooperative";
   import { walletAddress, walletChainId } from "../stores/user";
-  import type { TokenWithBalance, TokenWithChainId } from "../sdk/types";
   import EN from "../locales/EN.json";
 
   const locales = EN.components.tokenSelectorModal;
@@ -16,8 +19,8 @@
   /**
    * @typedef {object} TokenSelectorModalProps
    * @property {boolean} [open=false] - Whether the dialog is visible. Use `bind:open` from the parent.
-   * @property {"balances"|"top10"} [emptyQueryMode] - What to list when the search field is empty.
-   * @property {(token: import("../sdk/types").TokenWithChainId|import("../sdk/types").TokenWithBalance) => void} [onSelect] - Fired when the user confirms a token; the modal closes afterward.
+   * @property {"balances"|"top20"} [emptyQueryMode] - What to list when the search field is empty.
+   * @property {(token: import("cooperative").TokenWithChainId|import("cooperative").TokenWithBalance) => void} [onSelect] - Fired when the user confirms a token; the modal closes afterward.
    */
 
   /** @type {TokenSelectorModalProps} */
@@ -27,7 +30,7 @@
     emptyQueryMode,
   }: {
     open?: boolean;
-    emptyQueryMode?: "balances" | "top10";
+    emptyQueryMode?: "balances" | "top20";
     onSelect?: (token: TokenWithChainId | TokenWithBalance) => void;
   } = $props();
 

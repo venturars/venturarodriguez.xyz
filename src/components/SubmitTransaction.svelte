@@ -1,8 +1,10 @@
 <script lang="ts">
   import StatusMessage from "./StatusMessage.svelte";
-  import { approveAllowance } from "../sdk/token/approveAllowance";
-  import { retrieveAllowance } from "../sdk/token/retrieveAllowance";
-  import { waitReceipt } from "../sdk/transactions/waitReceipt";
+  import {
+    approveAllowance,
+    retrieveAllowance,
+    waitReceipt,
+  } from "cooperative";
   import { transactionToastStore } from "../stores/transactions";
   import { walletAddress, walletChainId } from "../stores/user";
   import { getTransactionErrorMessage } from "../utils/interface";

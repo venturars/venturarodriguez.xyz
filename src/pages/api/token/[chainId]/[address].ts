@@ -4,9 +4,9 @@ import {
   alchemyPricesNetworkSlug,
   NATIVE_TOKEN_ADDRESS,
   SUPPORTED_NETWORKS,
-} from "../../../../sdk/constants";
-import type { TokenWithDetails } from "../../../../sdk/types";
-import { buildLogoUrl } from "../../../../sdk/utils";
+  buildLogoUrl,
+  type TokenWithDetails,
+} from "cooperative";
 import {
   getRedisClient,
   validateAddress,

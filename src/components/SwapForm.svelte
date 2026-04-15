@@ -6,7 +6,7 @@
   import RecipientAddressInput from "./RecipientAddressInput.svelte";
   import SwapDetails from "./SwapDetails.svelte";
   import SubmitTransaction from "./SubmitTransaction.svelte";
-  import type { SwapPrice, TokenWithChainId } from "../sdk/types";
+  import type { SwapPrice, TokenWithChainId } from "cooperative";
   import {
     buildPlaceholderTokenWithChainId,
     formatBpsToPercent,
@@ -16,20 +16,22 @@
     parseAmountToUnits,
     normalizeNumericInput,
   } from "../utils/interface";
-  import { isValidAddress } from "../sdk/utils";
+  import { isValidAddress } from "cooperative";
   import {
     invalidateWalletData,
     walletChainId,
     walletAddress,
     walletDataEpoch,
   } from "../stores/user";
-  import { getPrice } from "../sdk/swaps/0x/getPrice";
-  import { getQuote } from "../sdk/swaps/0x/getQuote";
-  import { submitQuoteTransaction } from "../sdk/swaps/0x/submitQuoteTransaction";
-  import { validateQuoteAgainstPrice } from "../sdk/swaps/0x/validateQuoteAgainstPrice";
-  import { retrieveTokenWithBalance } from "../sdk/user/retrieveTokenWithBalance";
+  import {
+    getPrice,
+    getQuote,
+    retrieveTokenWithBalance,
+    submitQuoteTransaction,
+    validateQuoteAgainstPrice,
+    waitReceipt,
+  } from "cooperative";
   import { transactionToastStore } from "../stores/transactions";
-  import { waitReceipt } from "../sdk/transactions/waitReceipt";
   import {
     getTransactionErrorMessage,
     interpolateTemplate,
@@ -412,7 +414,7 @@
       bind:token={tokenOut}
       bind:value={amountOut}
       placeholder="0.0"
-      emptyQueryMode="top10"
+      emptyQueryMode="top20"
       previewOnly={true}
     />
 

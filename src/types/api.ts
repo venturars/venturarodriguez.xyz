@@ -1,5 +1,5 @@
 import type { Address } from "viem";
-import type { TokenWithChainId, TokenWithDetails } from "../sdk/types";
+import type { TokenWithChainId, TokenWithDetails } from "cooperative";
 
 export type ResolveTokenDetails = (
   chainId: number,

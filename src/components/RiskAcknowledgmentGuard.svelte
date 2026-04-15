@@ -2,7 +2,8 @@
   import { onMount } from "svelte";
   import { disconnect } from "@wagmi/core";
   import { walletAddress } from "../stores/user";
-  import { setupWalletStoreSync, wagmiConfig } from "../libs/appkit";
+  import { setupWalletStoreSync } from "../libs/walletSync";
+  import { wagmiConfig } from "../libs/web3";
   import RiskAcknowledgmentModal from "./RiskAcknowledgmentModal.svelte";
 
   /**
